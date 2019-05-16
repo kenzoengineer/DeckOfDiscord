@@ -274,7 +274,7 @@ public class BattleRoyale {
             }
             //split the best path into an array in order to find the starting location
             String[] arr = currentBest.split(" ");
-            System.out.println("The best starting location is " + arr[arr.length - 2]);
+            System.out.println("The best starting location is at " + arr[arr.length - 2]);
             System.out.println("The maximum amount of loot obtainable is " + currentBest.substring(currentBest.indexOf("#") + 1));
             long endT = System.nanoTime();
             //convert nanoseconds to seconds
