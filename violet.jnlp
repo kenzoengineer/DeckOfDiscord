@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp
+    spec="1.0+"
+    codebase="http://alexdp.free.fr/violetumleditor/demo"
+    href="violet.jnlp">
+
+<information>
+    <title>Violet UML Editor JNLP (Java Web Start) packaging</title>
+    <vendor>Alexandre de Pellegrin / Cay S. Horstmann</vendor>
+    <description>Free and open source software to create UML diagrams and even more</description>
+    <homepage href="http://violet.sourceforge.net"/>
+	<shortcut online="true">
+    	<desktop/>
+    	<menu submenu="Webstart Tutorial"/>
+  	</shortcut>
+  	<!-- 
+	<icon href="icon.png" kind="default" />
+	<icon href="splash.png" kind="splash" />
+	-->
+
+</information>
+
+<security>
+     <all-permissions/>
+     <j2ee-application-client-permissions/>
+</security>
+
+<resources>
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se" />
+        
+    <jar href="violetproduct-jnlp-2.1.0.jar"/>
+    <jar href="violetproduct-swing-2.1.0.jar" main="true"/>
+    <jar href="javaws-1.6.0.jar"/>
+
+</resources>
+<application-desc main-class="com.horstmann.violet.UMLEditorWebStart"/>
+</jnlp>
