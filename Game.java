@@ -21,10 +21,9 @@ class Game extends JFrame{
         this.add(right);
         setVisible(true);
     }
-    class GamePanel extends JPanel implements KeyListener, MouseListener{
+    class GamePanel extends JPanel implements KeyListener{
         GamePanel() {
             this.addKeyListener(this);
-            this.addMouseListener(this);
             setFocusable(true);
             requestFocusInWindow();
             setUndecorated(true);
@@ -45,21 +44,14 @@ class Game extends JFrame{
         }
         public void keyPressed(KeyEvent e) {}
         public void keyReleased(KeyEvent e) {}
-        
-        public void mouseExited(MouseEvent e) {}
-        public void mouseEntered(MouseEvent e) {
-            Point p = new Point(e.getLocationOnScreen());
-            l = (p.toString());
-        }
-        public void mouseReleased(MouseEvent e) {}
-        public void mousePressed(MouseEvent e) {}
-        public void mouseClicked(MouseEvent e) {}
     }
     class ScrollComponent extends JPanel implements MouseListener {
         ScrollComponent() {
             this.addMouseListener(this);
         }
-        public void mouseExited(MouseEvent e) {}
+        public void mouseExited(MouseEvent e) {
+            l = "Mouse Exited";
+        }
         public void mouseEntered(MouseEvent e) {
             Point p = new Point(e.getLocationOnScreen());
             l = (p.toString());
