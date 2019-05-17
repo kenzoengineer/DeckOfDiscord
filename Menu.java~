@@ -1,0 +1,23 @@
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+class Menu{
+  Menue() {
+        setSize(1366,768); 
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new GridLayout(0,3));
+        setResizable(false);
+        GamePanel gp = new GamePanel();
+        JPanel left = new ScrollComponent();
+        left.setBorder(BorderFactory.createLineBorder(Color.black));
+        left.setPreferredSize(new Dimension(300,300));
+        
+        JPanel right = new ScrollComponent();
+        right.setBorder(BorderFactory.createLineBorder(Color.black));
+        right.setPreferredSize(new Dimension(300,768));
+        this.add(left);
+        this.add(gp);
+        this.add(right);
+        setVisible(true);
+    }
+}
