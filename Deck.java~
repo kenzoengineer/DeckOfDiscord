@@ -1,0 +1,4 @@
+import java.util.ArrayList;
+class Deck {
+    ArrayList<Card> deck = new ArrayList<>();
+}

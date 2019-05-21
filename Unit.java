@@ -1,4 +1,4 @@
-class Unit extends Card() {
+class Unit extends Card {
     int hp;
     int armor;
     int range;
@@ -6,12 +6,13 @@ class Unit extends Card() {
     int piercing;
     int attackSpeed;
     
-    public Unit(int h, int a, int r, int s, int p, int a) {
+    public Unit(String name, String des, int h, int a, int r, int s, int p, int at) {
+        super(name, des);
         hp = h;
         armor = a;
         range = r;
         piercing = p;
-        attackSpeed = a;
+        attackSpeed = at;
     }
     
     //upon an age change, a loop with iterate through all cards and change their values
