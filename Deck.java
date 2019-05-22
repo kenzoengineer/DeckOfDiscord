@@ -32,6 +32,20 @@ class Deck {
     }
     
     public void shuffle() {
-        ArrayList<Card> temp = deck;
+        ArrayList<Card> temp = new ArrayList<>(deck);
+        deck.clear();
+        while (temp.size() > 0) {
+            Card c = temp.remove((int)(Math.random() * temp.size()));
+            deck.add(c);
+        }
+    }
+    
+    @Override
+    public String toString() {
+        String str = "";
+        for (int i = 0; i < deck.size(); i++) {
+            str += deck.get(i).getName() + " ";
+        }
+        return str;
     }
 }
