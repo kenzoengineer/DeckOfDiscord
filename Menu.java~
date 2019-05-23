@@ -48,7 +48,17 @@ class Menu extends JFrame{
       py= p.getY();
       //System.out.println(px + " "+ py);
       if (px<1500 && px>950 && py<280 && py>200){
-        System.out.print("start"+"\n");
+        //System.out.print("start"+"\n");
+        Deck deck = new Deck();
+        deck.addCard(new Unit("test1","testcard",6,5,4,3,2,1));
+        deck.addCard(new Unit("test2","testcard",6,5,4,3,2,1));
+        deck.addCard(new Unit("test3","testcard",6,5,4,3,2,1));
+        deck.addCard(new Unit("test4","testcard",6,5,4,3,2,1));
+        deck.addCard(new Unit("test5","testcard",6,5,4,3,2,1));
+        System.out.println("Before shuffle: " + deck.toString());
+        deck.shuffle();
+        System.out.println("After shuffle: " + deck.toString());
+        
       }else if(px<1500 && px>950 && py<380 && py>300){
         System.out.print("options"+"\n");
       }else if(px<1500 && px>950 && py<480 && py>400){

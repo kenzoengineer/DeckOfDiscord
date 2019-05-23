@@ -1,10 +1,11 @@
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
-class Menu extends JFrame{
+class Empire extends JFrame{
   double px=0;
   double py=0;
-  Menu() {
+  int empires = 0;
+  Empire() {
     setSize(1366,768); 
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setLayout(new BorderLayout());
@@ -13,11 +14,21 @@ class Menu extends JFrame{
     JPanel myPanel = new JPanel();
     add(myPanel);
     this.add(gp);
-    setVisible(true);   
+    setVisible(true);
+  }
+  
+  public void abilty(){
+  }
+  
+  public void select(){
+    if (empires == 1){
+    }
+  }
+  
+  public void openGame(){
+    Game startGame = new  Game();
   }
   class GamePanel extends JPanel implements MouseListener{
-    
-    
     GamePanel() {
       this.addMouseListener(this);
       setFocusable(true);
@@ -26,14 +37,15 @@ class Menu extends JFrame{
     }
     public void mouseExited(MouseEvent e) {
     }
-    public void mouseEntered(MouseEvent e) { 
+    public void mouseEntered(MouseEvent e) {
+      
     }
     public void mouseReleased(MouseEvent e) {}
     public void mousePressed(MouseEvent e) {}
     public void mouseClicked(MouseEvent e) {
+      
       px= e.getX();
       py= e.getY();
-      //System.out.println(px + " "+ py);
       if (px<1500 && px>950 && py<280 && py>200){
         System.out.print("start"+"\n");
       }else if(px<1500 && px>950 && py<380 && py>300){
@@ -51,5 +63,6 @@ class Menu extends JFrame{
       g.drawImage(menu,0,0,1366,768,this);
       repaint();
     }
+    
   }
 }
