@@ -4,12 +4,13 @@ import java.awt.event.*;
 class Menu extends JFrame{
   double px=0;
   double py=0;
+  GamePanel gp;
   Menu() {
     setSize(1366,768); 
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setLayout(new BorderLayout());
     setResizable(false);
-    GamePanel gp = new GamePanel();
+    gp = new GamePanel();
     JPanel myPanel = new JPanel();
     add(myPanel);
     this.add(gp);
@@ -36,6 +37,9 @@ class Menu extends JFrame{
       //System.out.println(px + " "+ py);
       if (px<1500 && px>950 && py<280 && py>200){
         System.out.print("start"+"\n");
+         Game game = new Game();
+         setVisible(false);
+         dispose();
       }else if(px<1500 && px>950 && py<380 && py>300){
         System.out.print("options"+"\n");
       }else if(px<1500 && px>950 && py<480 && py>400){

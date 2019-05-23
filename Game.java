@@ -11,7 +11,7 @@ class Game extends JFrame{
     boolean right = false;
     Image background = Toolkit.getDefaultToolkit().getImage("bg.jpg");
     Deck deck = new Deck();
-    ArrayList<Card> hand;
+    ArrayList<Card> hand = new ArrayList<>();
     Game() {
         setSize(1366,768); 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
