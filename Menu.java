@@ -37,7 +37,7 @@ class Menu extends JFrame{
       //System.out.println(px + " "+ py);
       if (px<1500 && px>950 && py<280 && py>200){
         System.out.print("start"+"\n");
-         Game game = new Game();
+         Empire game = new Empire();
          setVisible(false);
          dispose();
       }else if(px<1500 && px>950 && py<380 && py>300){
