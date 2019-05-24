@@ -22,6 +22,7 @@ class Empire extends JFrame{
   
   public void select(){
     if (empires == 1){
+      Persia persia = new Persia();
     }
   }
   

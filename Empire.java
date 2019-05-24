@@ -5,6 +5,7 @@ class Empire extends JFrame{
   double px=0;
   double py=0;
   int empires = 0;
+  String imageChange="menuImage.png";
   Empire() {
     setSize(1366,768); 
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -18,6 +19,13 @@ class Empire extends JFrame{
   }
   
   public void abilty(){
+    if (empires == 1){
+      Persia persia = new Persia();
+      imageChange="persia.jpg";
+      repaint();
+    }else if (empires == 2){
+      Image empireSelect = Toolkit.getDefaultToolkit().getImage("china.png");
+    }
   }
   
   public void select(){
@@ -48,7 +56,12 @@ class Empire extends JFrame{
       px= e.getX();
       py= e.getY();
       if (px<1500 && px>950 && py<280 && py>200){
-        System.out.print("start"+"\n");
+        System.out.print("persia"+"\n");
+        empires=1;
+        setVisible(false);
+        dispose();
+        abilty();
+        
       }else if(px<1500 && px>950 && py<380 && py>300){
         System.out.print("options"+"\n");
       }else if(px<1500 && px>950 && py<480 && py>400){
@@ -60,8 +73,8 @@ class Empire extends JFrame{
     }
     public void paintComponent(Graphics g) {
       super.paintComponent(g);
-      Image menu = Toolkit.getDefaultToolkit().getImage("menuImage.png");
-      g.drawImage(menu,0,0,1366,768,this);
+      Image empireSelect = Toolkit.getDefaultToolkit().getImage(imageChange);
+      g.drawImage(empireSelect,0,0,1366,768,this);
       repaint();
     }
     
