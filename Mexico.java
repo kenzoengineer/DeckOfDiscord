@@ -1,4 +1,4 @@
-class Persia extends Empire {  
+class Mexico extends Empire {  
   public void effect() {
     Deck deck = new Deck();
     Game game = new Game();
