@@ -1,0 +1,11 @@
+Gameplay:
+- Set in a 2d plane with your base one one end and the enemy’s on the other
+- To win the game, you must destroy the enemy base with your units
+- Units can be placed on the field by placing down it’s corresponding card
+- As the game progresses, the player moves through ages, upgrading the cards
+- Each unit have unique abilities, range, health, damage
+- Units move from your base to the enemy, fighting enemies along the way
+- Decks can be built so that they can be tailored to a player’s play style (i.e. ranged, tank, etc.)
+- Special ability cards which do damage or reduce cool downs can also be placed in the deck
+- When a card is placed, there is a cool down and your hand is replenished from the deck
+- New cards are unlocked after a win, with enemies getting harder after subsequent wins
