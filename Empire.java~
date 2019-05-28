@@ -19,8 +19,24 @@ class Empire extends JFrame{
     setVisible(true);
   }
   
+  public int empireCheck(){
+    return empires;
+  }
+  
   public void abilty(){
-    
+    if (empires == 1){
+      Persia nation = new Persia();
+      nation.effect();
+    }else if (empires == 2){
+      China nation = new China();
+      nation.effect();
+    }else if (empires == 3){
+      Mexico nation = new Mexico();
+      nation.effect();
+    }else if (empires == 4){
+      Mars nation = new Mars();
+      nation.effect();
+    }
   }
   
   public void select(){
@@ -28,6 +44,10 @@ class Empire extends JFrame{
       empireSelect = Toolkit.getDefaultToolkit().getImage("persia1.jpg");
     }else if (empires == 2){
       Image empireSelect = Toolkit.getDefaultToolkit().getImage("china.png");
+    }else if (empires == 3){
+      Image empireSelect = Toolkit.getDefaultToolkit().getImage("mexico.png");
+    }else if (empires == 4){
+      Image empireSelect = Toolkit.getDefaultToolkit().getImage("mars.png");
     }
   }
   

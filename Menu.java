@@ -1,11 +1,21 @@
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
+import java.io.*;
+import sun.audio.*;
 class Menu extends JFrame{
   double px=0;
   double py=0;
   GamePanel gp;
+  AudioStream audioStream;
   Menu() {
+    String soundFile = "menu.au";
+    try {
+      InputStream in = new FileInputStream(soundFile);
+      audioStream = new AudioStream(in);
+    } catch (IOException e) {}
+    
+    AudioPlayer.player.start(audioStream);
     setSize(1366,768); 
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setLayout(new BorderLayout());
@@ -37,9 +47,10 @@ class Menu extends JFrame{
       //System.out.println(px + " "+ py);
       if (px<1500 && px>950 && py<280 && py>200){
         System.out.print("start"+"\n");
-         Empire game = new Empire();
-         setVisible(false);
-         dispose();
+        AudioPlayer.player.stop(audioStream);
+        Empire game = new Empire();
+        setVisible(false);
+        dispose();
       }else if(px<1500 && px>950 && py<380 && py>300){
         System.out.print("options"+"\n");
       }else if(px<1500 && px>950 && py<480 && py>400){
