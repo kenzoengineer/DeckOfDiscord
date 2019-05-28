@@ -1,3 +1,4 @@
+import com.sun.javafx.css.SizeUnits;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
@@ -10,11 +11,15 @@ class Game extends JFrame{
     int y = 0;
     boolean left = false;
     boolean right = false;
+    String zoom = "";
+    Color dark = new Color(0,0,0,0);
     Image background = Toolkit.getDefaultToolkit().getImage("bg.png");
     Deck deck = new Deck();
-    ArrayList<Card> hand = new ArrayList<>();
+    Image zoomedImage;
+    ArrayList<DisplayCard> hand = new ArrayList<>();
     Game() {
-        hand.add(new Unit("","",1,2,3,4,5,6));
+        //add placeholder card
+        hand.add(new DisplayCard(new Unit("","",1,2,3,4,5,6)));
         setSize(1366,768); 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
@@ -48,15 +53,19 @@ class Game extends JFrame{
     }
     
     public void addHand() {
-        hand.add(deck.pop());
+        hand.add(new DisplayCard(deck.pop()));
     }
     
-    class GamePanel extends JPanel implements KeyListener{
+    class GamePanel extends JPanel implements KeyListener {
         GamePanel() {
             this.addKeyListener(this);
             setFocusable(true);
             requestFocusInWindow();
             setUndecorated(true);
+        }
+        
+        public Image resize(Image i,double scale) {
+            return i.getScaledInstance((int)(i.getWidth(null) * scale),(int) (i.getHeight(null) * scale), Image.SCALE_SMOOTH);
         }
         
         @Override
@@ -70,13 +79,23 @@ class Game extends JFrame{
             if (right) x--;
             
             for (int i = 0; i < hand.size() && i < 5; i++) {
-                g.fillRect(25 + (i * 220), 500, 150, 200);
+                g.setColor(hand.get(i).color);
+                //g.fillRect(25 + (i * 220), 500, 150, 200);
+                Image img = Toolkit.getDefaultToolkit().getImage(hand.get(i).picture);
+                g.drawImage(img, 25 + (i * 220), 500, null);
             }
             
-            g.setColor(Color.BLACK);
+            if (!zoom.equals("")) {
+                System.out.println(1);
+                g.drawImage(zoomedImage, 400, 200, null);
+            }
+            
+            g.setColor(dark);
+            g.fillRect(0, 0, 1366, 768);
             repaint();
         }
         
+        boolean done = false;
         public void keyTyped(KeyEvent e) {
             if (e.getKeyChar() == 'p') {
                 System.exit(0);
@@ -88,8 +107,32 @@ class Game extends JFrame{
                 addHand();
             }
         }
-        public void keyPressed(KeyEvent e) {}
-        public void keyReleased(KeyEvent e) {}
+        public void keyPressed(KeyEvent e) {
+            if (e.getKeyChar() == 'z') {
+                Point p = MouseInfo.getPointerInfo().getLocation();
+                double px = p.getX();
+                double py = p.getY();
+                System.out.println(px + " " + py);
+                if (px > 169 && px < 318 && py > 525) {
+                    l = Integer.toString(1);
+                    dark = new Color(0,0,0,50);
+                    zoom = hand.get(0).picture;
+                    if (!done) {
+                        zoomedImage = Toolkit.getDefaultToolkit().getImage(zoom);
+                        zoomedImage = resize(zoomedImage,2);
+                        done = true;
+                    }
+                }
+            }
+        }
+        public void keyReleased(KeyEvent e) {
+            if (e.getKeyChar() == 'z') {
+                l = "nothing";
+                dark = new Color(0,0,0,0);
+                zoom = "";
+                done = false;
+            }
+        }
     }
     class ScrollComponentL extends JPanel implements MouseListener {
         ScrollComponentL() {
