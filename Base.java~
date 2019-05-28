@@ -1,0 +1,12 @@
+class Base extends Game {
+  int health = 200
+  public void setBaseAge(int age) {
+    heatlth=health*age
+  }
+  public int getBaseHealth(){
+    return health
+  }
+  public void damageBase(int damage){
+    health=health-damage;
+  }
+}

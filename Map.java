@@ -4,7 +4,7 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
 import org.w3c.dom.NameList;
-class Game extends JFrame{
+class Map extends JFrame{
     public String l = "";
     int x = 0;
     int y = 0;
