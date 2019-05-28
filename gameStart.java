@@ -1,5 +1,6 @@
 class gameStart {
   public static void main(String[] args) {
-    Menu game = new Menu();
+    //Menu game = new Menu();
+      Game game = new Game();
   }
 }

@@ -13,7 +13,6 @@ class Game extends JFrame{
     Image background = Toolkit.getDefaultToolkit().getImage("bg.png");
     Deck deck = new Deck();
     ArrayList<Card> hand = new ArrayList<>();
-    CardPanel[] handCards;
     Game() {
         hand.add(new Unit("","",1,2,3,4,5,6));
         setSize(1366,768); 
@@ -23,33 +22,21 @@ class Game extends JFrame{
         
         JPanel whole = new JPanel();
         whole.setLayout(new BoxLayout(whole, BoxLayout.X_AXIS));
-        
-        HandPanel cards = new HandPanel();
-        cards.setLayout(new BoxLayout(cards, BoxLayout.X_AXIS));
-        
-        handCards = new CardPanel[5];
-        for (int i = 0; i < handCards.length; i++) {
-            handCards[i] = new CardPanel(i);
-            cards.add(handCards[i]);
-        }
-        
-        
         GamePanel gp = new GamePanel();
-        gp.setPreferredSize(new Dimension(1000,768-500));
+        gp.setPreferredSize(new Dimension(1000 + 80,768-500));
         
         JPanel left = new ScrollComponentL();
         //left.setBorder(BorderFactory.createLineBorder(Color.black));
-        left.setPreferredSize(new Dimension(183,768-500));
+        left.setPreferredSize(new Dimension(183-40,768-500));
                 
         JPanel right = new ScrollComponentR();
         //right.setBorder(BorderFactory.createLineBorder(Color.black));
-        right.setPreferredSize(new Dimension(183,768-500));
+        right.setPreferredSize(new Dimension(183-40,768-500));
         
         whole.add(left);
         whole.add(gp);
         whole.add(right);
         add(whole);
-        add(cards);
         setVisible(true);
     }
     public void initGame() {
@@ -58,10 +45,12 @@ class Game extends JFrame{
             deck.addCard(new Unit(Integer.toString((int) (Math.random() * 255)),"e",1,2,3,4,5,6));
         }
         System.out.println(deck.toString());
-        for (int i = 0; i < 5; i++) {
-            hand.add(deck.pop());
-        }
     }
+    
+    public void addHand() {
+        hand.add(deck.pop());
+    }
+    
     class GamePanel extends JPanel implements KeyListener{
         GamePanel() {
             this.addKeyListener(this);
@@ -80,12 +69,11 @@ class Game extends JFrame{
             if (left) x++;
             if (right) x--;
             
-            g.setColor(Color.BLACK);
-            for (int i = 0; i < handCards.length; i++) {
-                String name = handCards[i].getName();
-                g.drawString(name, 100 + i * 150, 500);
+            for (int i = 0; i < hand.size() && i < 5; i++) {
+                g.fillRect(25 + (i * 220), 500, 150, 200);
             }
             
+            g.setColor(Color.BLACK);
             repaint();
         }
         
@@ -95,6 +83,9 @@ class Game extends JFrame{
             }
             if (e.getKeyChar() == 'a') {
                 initGame();
+            }
+            if (e.getKeyChar() == 's') {
+                addHand();
             }
         }
         public void keyPressed(KeyEvent e) {}
@@ -134,32 +125,6 @@ class Game extends JFrame{
             l = (p.toString());
             right = true;
         }
-        public void mouseReleased(MouseEvent e) {}
-        public void mousePressed(MouseEvent e) {}
-        public void mouseClicked(MouseEvent e) {}
-    }
-    
-    class HandPanel extends JPanel {
-    }
-    
-    class CardPanel extends JPanel implements MouseListener {
-        int num;
-        public CardPanel(int i) {
-            setBackground(new Color(220,220,220));
-            setPreferredSize(new Dimension(50,100));
-            setBorder(BorderFactory.createLineBorder(Color.black));
-            num = i;
-        }
-        
-        public String getName() {
-            if (hand.size() > num) {
-                String name = hand.get(num).getName();
-                return name;
-            } else return "e";
-        }
-        
-        public void mouseExited(MouseEvent e) {}
-        public void mouseEntered(MouseEvent e) {}
         public void mouseReleased(MouseEvent e) {}
         public void mousePressed(MouseEvent e) {}
         public void mouseClicked(MouseEvent e) {}
