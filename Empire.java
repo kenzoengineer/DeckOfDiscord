@@ -67,7 +67,7 @@ class Empire extends JFrame{
     }else if (empires == 3){
       empireSelect = Toolkit.getDefaultToolkit().getImage("mexico.jpg");
       AudioPlayer.player.stop(audioStream);
-      soundFile = "persia.au";
+      soundFile = "mexico.au";
       try {
         InputStream in = new FileInputStream(soundFile);
         audioStream = new AudioStream(in);
@@ -76,7 +76,7 @@ class Empire extends JFrame{
     }else if (empires == 4){
       empireSelect = Toolkit.getDefaultToolkit().getImage("mars.jpg");
       AudioPlayer.player.stop(audioStream);
-      soundFile = "persia.au";
+      soundFile = "mars.au";
       try {
         InputStream in = new FileInputStream(soundFile);
         audioStream = new AudioStream(in);
