@@ -1,14 +1,14 @@
-import com.sun.javafx.css.SizeUnits;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
-import org.w3c.dom.NameList;
 class Game extends JFrame{
     public String l = "";
     int x = 0;
     int y = 0;
+    int dx = 0;
+    int dy = 0;
     boolean left = false;
     boolean right = false;
     String zoom = "";
@@ -56,9 +56,11 @@ class Game extends JFrame{
         hand.add(new DisplayCard(deck.pop()));
     }
     
-    class GamePanel extends JPanel implements KeyListener {
+    class GamePanel extends JPanel implements KeyListener, MouseListener, MouseMotionListener {
         GamePanel() {
             this.addKeyListener(this);
+            this.addMouseListener(this);
+            this.addMouseMotionListener(this);
             setFocusable(true);
             requestFocusInWindow();
             setUndecorated(true);
@@ -79,8 +81,11 @@ class Game extends JFrame{
             for (int i = 0; i < hand.size() && i < 5; i++) {
                 g.setColor(hand.get(i).color);
                 Image img = Toolkit.getDefaultToolkit().getImage(hand.get(i).picture);
-                g.drawImage(img, 25 + (i * 220), 500, null);
-                //g.drawRect(25 + (i * 220), 500, 145, 200);
+                if (!dragging || i != 0) {
+                    g.drawImage(img, 25 + (i * 220), 500, null);
+                } else {
+                    g.drawImage(img, dx, dy, null);
+                }
             }
             if (!zoom.equals("")) {
                 g.drawImage(zoomedImage, 400, 200, null);
@@ -108,7 +113,7 @@ class Game extends JFrame{
                 Point p = MouseInfo.getPointerInfo().getLocation();
                 double px = p.getX();
                 double py = p.getY();
-                System.out.println(px + " " + py);
+                //System.out.println(px + " " + py);
                 if (px > 169 && px < 318 && py > 525 && hand.size() > 0) {
                     dark = new Color(0,0,0,50);
                     zoom = hand.get(0).picture;                  
@@ -134,12 +139,28 @@ class Game extends JFrame{
         }
         public void keyReleased(KeyEvent e) {
             if (e.getKeyChar() == 'z') {
-                l = "nothing";
                 dark = new Color(0,0,0,0);
                 zoom = "";
                 done = false;
             }
         }
+        boolean dragging = false;
+        public void mouseExited(MouseEvent e) {}
+        public void mouseEntered(MouseEvent e) {}
+        public void mouseReleased(MouseEvent e) {
+            dragging = false;
+        }
+        public void mouseClicked(MouseEvent e) {}
+        public void mousePressed(MouseEvent e) {
+            dx = e.getX();
+            dy = e.getY();
+            dragging = true;
+        }
+        public void mouseDragged (MouseEvent e) {
+            dx = e.getX();
+            dy = e.getY();       
+        }
+        public void mouseMoved (MouseEvent me) {}
     }
     class ScrollComponentL extends JPanel implements MouseListener {
         ScrollComponentL() {
@@ -148,12 +169,10 @@ class Game extends JFrame{
             setBackground(new Color(0,0,0,0));
         }
         public void mouseExited(MouseEvent e) {
-            l = "Mouse Exited";
             left = false;
         }
         public void mouseEntered(MouseEvent e) {
             Point p = new Point(e.getLocationOnScreen());
-            l = (p.toString());
             left = true;
         }
         public void mouseReleased(MouseEvent e) {}
@@ -167,12 +186,10 @@ class Game extends JFrame{
             setBackground(new Color(0,0,0,0));
         }
         public void mouseExited(MouseEvent e) {
-            l = "Mouse Exited";
             right = false;
         }
         public void mouseEntered(MouseEvent e) {
             Point p = new Point(e.getLocationOnScreen());
-            l = (p.toString());
             right = true;
         }
         public void mouseReleased(MouseEvent e) {}
