@@ -19,7 +19,7 @@ class Game extends JFrame{
     ArrayList<DisplayCard> hand = new ArrayList<>();
     Game() {
         //add placeholder card
-        hand.add(new DisplayCard(new Unit("","",1,2,3,4,5,6)));
+        //hand.add(new DisplayCard(new Unit("","",1,2,3,4,5,6)));
         setSize(1366,768); 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
@@ -72,21 +72,17 @@ class Game extends JFrame{
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
             g.setColor(Color.GREEN);
-            //g.fillRect(x,y,200,200);
             g.drawImage(background, x,y,null);
             g.drawString(l, 20,400);
             if (left) x++;
             if (right) x--;
-            
             for (int i = 0; i < hand.size() && i < 5; i++) {
                 g.setColor(hand.get(i).color);
-                //g.fillRect(25 + (i * 220), 500, 150, 200);
                 Image img = Toolkit.getDefaultToolkit().getImage(hand.get(i).picture);
                 g.drawImage(img, 25 + (i * 220), 500, null);
+                //g.drawRect(25 + (i * 220), 500, 145, 200);
             }
-            
             if (!zoom.equals("")) {
-                System.out.println(1);
                 g.drawImage(zoomedImage, 400, 200, null);
             }
             
@@ -113,15 +109,26 @@ class Game extends JFrame{
                 double px = p.getX();
                 double py = p.getY();
                 System.out.println(px + " " + py);
-                if (px > 169 && px < 318 && py > 525) {
-                    l = Integer.toString(1);
+                if (px > 169 && px < 318 && py > 525 && hand.size() > 0) {
                     dark = new Color(0,0,0,50);
-                    zoom = hand.get(0).picture;
-                    if (!done) {
-                        zoomedImage = Toolkit.getDefaultToolkit().getImage(zoom);
-                        zoomedImage = resize(zoomedImage,2);
-                        done = true;
-                    }
+                    zoom = hand.get(0).picture;                  
+                } else if (px > 389 && px < 535 && py > 525 && hand.size() > 1) {
+                    dark = new Color(0,0,0,50);
+                    zoom = hand.get(1).picture;                    
+                }  else if (px > 609 && px < 755 && py > 525 && hand.size() > 2) {
+                    dark = new Color(0,0,0,50);
+                    zoom = hand.get(2).picture;                   
+                }  else if (px > 829 && px < 975 && py > 525 && hand.size() > 3) {
+                    dark = new Color(0,0,0,50);
+                    zoom = hand.get(3).picture;
+                }  else if (px > 1049 && px < 1195 && py > 525 && hand.size() > 4) {
+                    dark = new Color(0,0,0,50);
+                    zoom = hand.get(4).picture;
+                }
+                if (!done) {
+                    zoomedImage = Toolkit.getDefaultToolkit().getImage(zoom);
+                    zoomedImage = resize(zoomedImage,2);
+                    done = true;
                 }
             }
         }

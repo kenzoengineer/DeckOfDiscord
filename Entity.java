@@ -1,4 +1,5 @@
 import java.io.File;
+import java.util.Scanner;
 class Entity extends Card {
     int hp;
     int armor;
@@ -21,10 +22,13 @@ class Entity extends Card {
     }
     public void getDeck(){
       File myFile = new File (empireDeck);
-      Scanner input = new Scanner(myFile);
-      for (int i=0; i<20; i++){
-        cardUse[i]=input.next();
-      }
+      Scanner input;
+      try {
+        input = new Scanner(myFile);
+        for (int i=0; i<20; i++){
+          cardUse[i]=input.next();
+        }
+      } catch (Exception e) {}
       System.out.print(cardUse[3]);
     }
     public void checkEmpire(){

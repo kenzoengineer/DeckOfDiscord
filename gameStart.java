@@ -1,7 +1,7 @@
 class gameStart {
   public static void main(String[] args) {
-    Menu game = new Menu();
-    //Game game = new Game();
+    //Menu game = new Menu();
+    Game game = new Game();
     //Entity game = new Entity();
   }
 }
