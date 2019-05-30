@@ -9,8 +9,11 @@ class Game extends JFrame{
     int y = 0;
     int dx = 0;
     int dy = 0;
+    int offsetX = 0;
+    int offsetY = 0;
     boolean left = false;
     boolean right = false;
+    int dragCard;
     String zoom = "";
     Color dark = new Color(0,0,0,0);
     Image background = Toolkit.getDefaultToolkit().getImage("bg.png");
@@ -63,7 +66,7 @@ class Game extends JFrame{
             this.addMouseMotionListener(this);
             setFocusable(true);
             requestFocusInWindow();
-            setUndecorated(true);
+            setUndecorated(false);
         }
         
         public Image resize(Image i,double scale) {
@@ -81,10 +84,11 @@ class Game extends JFrame{
             for (int i = 0; i < hand.size() && i < 5; i++) {
                 g.setColor(hand.get(i).color);
                 Image img = Toolkit.getDefaultToolkit().getImage(hand.get(i).picture);
-                if (!dragging || i != 0) {
+                if (!dragging || i != dragCard) {
+                    g.drawRect(25 + (i * 220), 500,145,200);
                     g.drawImage(img, 25 + (i * 220), 500, null);
                 } else {
-                    g.drawImage(img, dx, dy, null);
+                    g.drawImage(img, dx - offsetX, dy - offsetY, null);
                 }
             }
             if (!zoom.equals("")) {
@@ -148,13 +152,28 @@ class Game extends JFrame{
         public void mouseExited(MouseEvent e) {}
         public void mouseEntered(MouseEvent e) {}
         public void mouseReleased(MouseEvent e) {
+            if (e.getY() < 480 && dragging) {
+                hand.remove(dragCard);
+            }
             dragging = false;
         }
         public void mouseClicked(MouseEvent e) {}
         public void mousePressed(MouseEvent e) {
-            dx = e.getX();
-            dy = e.getY();
-            dragging = true;
+            System.out.println("Pressed. x: " +  e.getX() + " y: " + e.getY());
+            int px = e.getX();
+            int py = e.getY();
+            for (int i = 0; i < 5; i++) {
+                if (px > 25 + (i * 220) && px < 170 + (i * 220) && py > 500 && hand.size() > i) {
+                    dx = e.getX();
+                    dy = e.getY();
+                    offsetX = dx - (25 + (i * 220));
+                    System.out.println(i);
+                    offsetY = dy - 500;
+                    System.out.println(offsetX + " " + offsetY);
+                    dragging = true;
+                    dragCard = i;
+                }
+            }
         }
         public void mouseDragged (MouseEvent e) {
             dx = e.getX();

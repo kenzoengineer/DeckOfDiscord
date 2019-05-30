@@ -127,10 +127,9 @@ class Empire extends JFrame{
         System.out.print("back"+"\n");
         empireSelect = Toolkit.getDefaultToolkit().getImage("select.jpg");
       }else if (px < 328 && px > 76 && py < 534 && py > 458){
-        //Game game = new Game();
-        Entity game = new Entity("","",1,2,3,4,5,6);
-        game.checkDeck(empires);
-        game.getDeck();
+        System.out.println("aaaa");
+        dispose();
+        Game game = new Game();
       }
     }
     public void paintComponent(Graphics g) {
