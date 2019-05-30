@@ -5,34 +5,49 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 class Game extends JFrame{
-    int x = 0;
-    int dx = 0;
-    int dy = 0;
-    int offsetX = 0;
-    int offsetY = 0;
-    boolean left = false;
-    boolean right = false;
+    int x;
+    int dx;
+    int dy;
+    int offsetX;
+    int offsetY;
+    boolean left;
+    boolean right;
     int dragCard;
     int empireNumber;
     String empireName;
-    String zoom = "";
-    Color dark = new Color(0,0,0,0);
-    Image background = Toolkit.getDefaultToolkit().getImage("bg.png");
-    Deck deck = new Deck();
+    String zoom;
+    Color dark;
+    Image background;
+    Deck deck;
     Image zoomedImage;
-    ArrayList<DisplayCard> hand = new ArrayList<>();
-    ArrayList<Entity> units = new ArrayList<>();
+    ArrayList<DisplayCard> hand;
+    ArrayList<Entity> units;
+    
     Game(int e) {
         empireNumber = e;
-        if (e == 1) {
-            empireName = "persia";
-        } else if (e == 2) {
-            empireName = "china";
-        } else if (e == 3) {
-            empireName = "mexico";
-        } else {
-            empireName = "mars";
+        switch (e) {
+            case 1:
+                empireName = "persia";
+                break;
+            case 2:
+                empireName = "china";
+                break;
+            case 3:
+                empireName = "mexico";
+                break;
+            default:
+                empireName = "mars";
+                break;
         }
+        
+        zoom = "";
+        left = false;
+        right = false;
+        background = Toolkit.getDefaultToolkit().getImage("bg.png");
+        deck = new Deck();
+        dark = new Color(0,0,0,0);
+        hand = new ArrayList<>();
+        units = new ArrayList<>();
         
         setSize(1366,768); 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -43,11 +58,11 @@ class Game extends JFrame{
         GamePanel gp = new GamePanel();
         gp.setPreferredSize(new Dimension(1000 + 80,768-500));
         
-        JPanel left = new ScrollComponentL();
+        JPanel left = new ScrollComponent();
         //left.setBorder(BorderFactory.createLineBorder(Color.black));
         left.setPreferredSize(new Dimension(183-40,768-500));
                 
-        JPanel right = new ScrollComponentR();
+        JPanel right = new ScrollComponent();
         //right.setBorder(BorderFactory.createLineBorder(Color.black));
         right.setPreferredSize(new Dimension(183-40,768-500));
         
@@ -56,7 +71,10 @@ class Game extends JFrame{
         whole.add(right);
         add(whole);
         setVisible(true);
+        
+        initGame();
     }
+    
     public void initGame() {
         //load in the card list (1,1,1,2,2,2,2,2,3,4,4)
         File myFile;
@@ -79,7 +97,6 @@ class Game extends JFrame{
     }
     
     public void addHand() {
-      
         hand.add(new DisplayCard((Unit)deck.pop()));
     }
     
@@ -113,6 +130,13 @@ class Game extends JFrame{
             if (right && x > -1485) x--;
             g.setColor(dark);
             g.fillRect(0, 0, 1366, 768);
+            
+            for (int i = 0; i < units.size(); i++) {
+                Image img = Toolkit.getDefaultToolkit().getImage(empireName + "Cards/" + units.get(i).des.substring(0,units.get(i).des.indexOf(".")) + "p.png");
+                g.drawImage(img, x + 100 + (units.get(i).getX()/10), 400, null);
+                units.get(i).setX(units.get(i).getX() + 1);
+            }
+            
             for (int i = 0; i < hand.size() && i < 5; i++) {
                 Image img = Toolkit.getDefaultToolkit().getImage(empireName + "Cards/" + hand.get(i).picture);
                 if (!dragging || i != dragCard) {
@@ -121,15 +145,11 @@ class Game extends JFrame{
                     g.drawImage(img, dx - offsetX, dy - offsetY, null);
                 }
             }
+            
             if (!zoom.equals("")) {
                 g.drawImage(zoomedImage, 400, 100, null);
             }
             
-            for (int i = 0; i < units.size(); i++) {
-                Image img = Toolkit.getDefaultToolkit().getImage(empireName + "Cards/" + units.get(i).des.substring(0,units.get(i).des.indexOf(".")) + "p.png");
-                g.drawImage(img, x + 100 + (units.get(i).getX()/10), 400, null);
-                units.get(i).setX(units.get(i).getX() + 1);
-            }
             repaint();
         }
         
@@ -147,12 +167,12 @@ class Game extends JFrame{
             if (e.getKeyChar() == 'd') {
             }
         }
+        
         public void keyPressed(KeyEvent e) {
             if (e.getKeyChar() == 'z') {
                 Point p = MouseInfo.getPointerInfo().getLocation();
                 double px = p.getX();
                 double py = p.getY();
-                //System.out.println(px + " " + py);
                 if (px > 169 && px < 318 && py > 525 && hand.size() > 0) {
                     dark = new Color(0,0,0,50);
                     zoom = hand.get(0).picture;                  
@@ -176,6 +196,7 @@ class Game extends JFrame{
                 }
             }
         }
+        
         public void keyReleased(KeyEvent e) {
             if (e.getKeyChar() == 'z') {
                 dark = new Color(0,0,0,0);
@@ -183,16 +204,15 @@ class Game extends JFrame{
                 done = false;
             }
         }
+        
         boolean dragging = false;
-        public void mouseExited(MouseEvent e) {}
-        public void mouseEntered(MouseEvent e) {}
         public void mouseReleased(MouseEvent e) {
             if (e.getY() < 480 && dragging) {
                 units.add(cardToEntity(hand.remove(dragCard).getCard()));
             }
             dragging = false;
         }
-        public void mouseClicked(MouseEvent e) {}
+        
         public void mousePressed(MouseEvent e) {
             System.out.println("Pressed. x: " +  e.getX() + " y: " + e.getY());
             int px = e.getX();
@@ -202,51 +222,45 @@ class Game extends JFrame{
                     dx = e.getX();
                     dy = e.getY();
                     offsetX = dx - (25 + (i * 220));
-                    System.out.println(i);
                     offsetY = dy - 500;
-                    System.out.println(offsetX + " " + offsetY);
                     dragging = true;
                     dragCard = i;
                 }
             }
         }
+        
         public void mouseDragged (MouseEvent e) {
             dx = e.getX();
             dy = e.getY();       
         }
+        
+        public void mouseExited(MouseEvent e) {}
+        public void mouseEntered(MouseEvent e) {}
+        public void mouseClicked(MouseEvent e) {}
         public void mouseMoved (MouseEvent me) {}
     }
     
-    class ScrollComponentL extends JPanel implements MouseListener {
-        ScrollComponentL() {
+    class ScrollComponent extends JPanel implements MouseListener {
+        ScrollComponent() {
             this.addMouseListener(this);
+            //change this to a picture later
             setBackground(new Color(0,0,0,255));
             setVisible(true);
         }
+        
         public void mouseExited(MouseEvent e) {
             left = false;
-        }
-        public void mouseEntered(MouseEvent e) {
-            Point p = new Point(e.getLocationOnScreen());
-            left = true;
-        }
-        public void mouseReleased(MouseEvent e) {}
-        public void mousePressed(MouseEvent e) {}
-        public void mouseClicked(MouseEvent e) {}
-    }
-    class ScrollComponentR extends JPanel implements MouseListener {
-        ScrollComponentR() {
-            this.addMouseListener(this);
-            setBackground(new Color(0,0,0,255));
-            setVisible(true);
-        }
-        public void mouseExited(MouseEvent e) {
             right = false;
         }
+        
         public void mouseEntered(MouseEvent e) {
-            Point p = new Point(e.getLocationOnScreen());
-            right = true;
+            if (e.getXOnScreen() < 500) {
+                left = true;
+            } else {
+                right = true;
+            }
         }
+        
         public void mouseReleased(MouseEvent e) {}
         public void mousePressed(MouseEvent e) {}
         public void mouseClicked(MouseEvent e) {}

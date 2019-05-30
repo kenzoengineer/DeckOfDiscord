@@ -12,16 +12,15 @@ class Empire extends JFrame{
   String soundFile = "menu.au";
   Empire() {
     empireSelect = Toolkit.getDefaultToolkit().getImage("select.jpg");
-    setSize(1366,768); 
+    setSize(1366,768);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setLayout(new BorderLayout());
     setResizable(false);
     GamePanel gp = new GamePanel();
     JPanel myPanel = new JPanel();
     add(myPanel);
-    this.add(gp);
+    add(gp);
     setVisible(true);
-    
   }
   
   public int empireCheck(){
@@ -91,15 +90,8 @@ class Empire extends JFrame{
       requestFocusInWindow();
       setUndecorated(false);
     }
-    public void mouseExited(MouseEvent e) {
-    }
-    public void mouseEntered(MouseEvent e) {
-      
-    }
-    public void mouseReleased(MouseEvent e) {}
-    public void mousePressed(MouseEvent e) {}
+    
     public void mouseClicked(MouseEvent e) {
-      
       px= e.getX();
       py= e.getY();
       System.out.println(px + " "+ py);
@@ -123,21 +115,21 @@ class Empire extends JFrame{
         System.out.print("back"+"\n");
         empireSelect = Toolkit.getDefaultToolkit().getImage("select.jpg");
       }else if (px < 328 && px > 76 && py < 534 && py > 458){
-        
         dispose();
-       // Entity game =  new Entity("","",1,2,3,4,5,6);
-       // game.checkDeck(empires);
-       // game.getDeck();
-        //game.getCard();
         Game game = new Game(empireCheck());
-        
       }
     }
+    
     public void paintComponent(Graphics g) {
       super.paintComponent(g);
       g.drawImage(empireSelect,0,0,1366,768,this);
       repaint();
     }
+    
+    public void mouseExited(MouseEvent e) {}
+    public void mouseEntered(MouseEvent e) {}
+    public void mouseReleased(MouseEvent e) {}
+    public void mousePressed(MouseEvent e) {}
     
   }
 }
