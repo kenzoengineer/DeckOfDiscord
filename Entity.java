@@ -1,7 +1,7 @@
 import java.io.File;
 import java.util.Scanner;
 import java.util.ArrayList;
-class Entity extends Card {
+class Entity {
   int hp;
   int armor;
   int range;
@@ -12,21 +12,22 @@ class Entity extends Card {
   String name;
   String empireDeck;
   int whichEmpire;
-  int x=0;
+  int x;
   File myFile;
   Scanner input;
   String [] cardUse= new String [30]; 
   //ArrayList<Entity> deck = new ArrayList<>();
   
   public Entity(String name, String des, int h, int a, int r, int s, int p, int at) {
-    super(name, des);
-    
+    this.name = name;
+    this.des = des;
     hp = h;
     armor = a;
     range = r;
     speed= s;
     piercing = p;
     attackSpeed = at;
+    int x = 0;
   }
   public void getDeck(){
     try{
@@ -65,7 +66,7 @@ class Entity extends Card {
         attackSpeed=Integer.parseInt(input.next());
       }      
     }
-    Game.deck.add(new Entity(name,des,hp,armor,range,speed,piercing,attackSpeed));
+    //Game.deck.add(new Entity(name,des,hp,armor,range,speed,piercing,attackSpeed));
     input.close();
   }
   //public int sendEntity(){
@@ -81,4 +82,69 @@ class Entity extends Card {
       empireDeck=("mars.txt");
     }
   }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
+    public int getArmor() {
+        return armor;
+    }
+
+    public void setArmor(int armor) {
+        this.armor = armor;
+    }
+
+    public int getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
+    public int getPiercing() {
+        return piercing;
+    }
+
+    public void setPiercing(int piercing) {
+        this.piercing = piercing;
+    }
+
+    public int getAttackSpeed() {
+        return attackSpeed;
+    }
+
+    public void setAttackSpeed(int attackSpeed) {
+        this.attackSpeed = attackSpeed;
+    }
+
+    public String getDes() {
+        return des;
+    }
+
+    public void setDes(String des) {
+        this.des = des;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+  
 }

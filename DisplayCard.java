@@ -1,17 +1,16 @@
 import java.awt.Color;
 class DisplayCard {
     String picture = "testCard.png";
-    Object card;
+    Unit card;
     int cardType;
 
-    DisplayCard(Entity c) {
+    DisplayCard(Unit c) {
         card = c;
         cardType=1;
-        if ((int)(Math.random() * 2) == 0) picture = "testCard2.png";
+        picture = card.getDes();
     }
-    DisplayCard(Card c) {
-        card = c;
-        cardType=1;
-        if ((int)(Math.random() * 2) == 0) picture = "testCard2.png";
+    
+    public Unit getCard() {
+        return card;
     }
 }

@@ -3,10 +3,9 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Scanner;
 class Game extends JFrame{
-    public String l = "";
     int x = 0;
-    int y = 0;
     int dx = 0;
     int dy = 0;
     int offsetX = 0;
@@ -14,22 +13,31 @@ class Game extends JFrame{
     boolean left = false;
     boolean right = false;
     int dragCard;
+    int empireNumber;
+    String empireName;
     String zoom = "";
-    Entity runTheDeck;
-    //Empire getTheEmpire;
     Color dark = new Color(0,0,0,0);
     Image background = Toolkit.getDefaultToolkit().getImage("bg.png");
     Deck deck = new Deck();
     Image zoomedImage;
     ArrayList<DisplayCard> hand = new ArrayList<>();
-    Game() {
-        //add placeholder card
-        //hand.add(new DisplayCard(new Unit("","",1,2,3,4,5,6)));
+    ArrayList<Entity> units = new ArrayList<>();
+    Game(int e) {
+        empireNumber = e;
+        if (e == 1) {
+            empireName = "persia";
+        } else if (e == 2) {
+            empireName = "china";
+        } else if (e == 3) {
+            empireName = "mexico";
+        } else {
+            empireName = "mars";
+        }
+        
         setSize(1366,768); 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         setResizable(false);
-        
         JPanel whole = new JPanel();
         whole.setLayout(new BoxLayout(whole, BoxLayout.X_AXIS));
         GamePanel gp = new GamePanel();
@@ -50,18 +58,29 @@ class Game extends JFrame{
         setVisible(true);
     }
     public void initGame() {
-        //create deck of cards
-       runTheDeck=  new Entity("","",1,2,3,4,5,6);
-       //getTheEmpire= new Empire();
-      //runTheDeck.checkDeck(getTheEmpire.empireCheck());
-      runTheDeck.getDeck();
-      runTheDeck.getEntity();
+        //load in the card list (1,1,1,2,2,2,2,2,3,4,4)
+        File myFile;
+        Scanner cardIn, cardLoader;
+        try{
+            myFile = new File(empireNumber + ".txt"); 
+            cardIn = new Scanner(myFile);
+            while (cardIn.hasNext()) {
+                int card = cardIn.nextInt();
+                cardLoader = new Scanner(new File(empireName + "Cards/" + card + ".txt"));
+                deck.addCard(new Unit(cardLoader.next(),cardLoader.next(),
+                    cardLoader.nextInt(),cardLoader.nextInt(),cardLoader.nextInt(),
+                    cardLoader.nextInt(),cardLoader.nextInt(),cardLoader.nextInt()));
+            }
+            
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found.");
+        }
         System.out.println(deck.toString());
     }
     
     public void addHand() {
       
-        hand.add(new DisplayCard(deck.pop()));
+        hand.add(new DisplayCard((Unit)deck.pop()));
     }
     
     class GamePanel extends JPanel implements KeyListener, MouseListener, MouseMotionListener {
@@ -74,22 +93,28 @@ class Game extends JFrame{
             setUndecorated(false);
         }
         
-        public Image resize(Image i,double scale) {
-            return i.getScaledInstance((int)(i.getWidth(null) * scale),(int) (i.getHeight(null) * scale), Image.SCALE_SMOOTH);
+        public Entity cardToEntity(Unit c) {
+            String name = c.getName();
+            String des = c.getDes();
+            int hp = c.getHp();
+            int armor = c.getArmor();
+            int range = c.getRange();
+            int speed = c.getSpeed();
+            int piercing = c.getPiercing();
+            int attackSpeed = c.getAttackSpeed();
+            return new Entity(name,des,hp,armor,range,speed,piercing,attackSpeed);
         }
         
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
-            g.setColor(Color.GREEN);
-            g.drawImage(background, x,y,null);
-            g.drawString(l, 20,400);
+            g.drawImage(background, x,0,null);
             if (left && x < 0) x++;
             if (right && x > -1485) x--;
             g.setColor(dark);
             g.fillRect(0, 0, 1366, 768);
             for (int i = 0; i < hand.size() && i < 5; i++) {
-                Image img = Toolkit.getDefaultToolkit().getImage(hand.get(i).picture);
+                Image img = Toolkit.getDefaultToolkit().getImage(empireName + "Cards/" + hand.get(i).picture);
                 if (!dragging || i != dragCard) {
                     g.drawImage(img, 25 + (i * 220), 500, null);
                 } else {
@@ -98,6 +123,12 @@ class Game extends JFrame{
             }
             if (!zoom.equals("")) {
                 g.drawImage(zoomedImage, 400, 100, null);
+            }
+            
+            for (int i = 0; i < units.size(); i++) {
+                Image img = Toolkit.getDefaultToolkit().getImage(empireName + "Cards/" + units.get(i).des.substring(0,units.get(i).des.indexOf(".")) + "p.png");
+                g.drawImage(img, x + 100 + (units.get(i).getX()/10), 400, null);
+                units.get(i).setX(units.get(i).getX() + 1);
             }
             repaint();
         }
@@ -112,6 +143,8 @@ class Game extends JFrame{
             }
             if (e.getKeyChar() == 's') {
                 addHand();
+            }
+            if (e.getKeyChar() == 'd') {
             }
         }
         public void keyPressed(KeyEvent e) {
@@ -138,7 +171,7 @@ class Game extends JFrame{
                 }
                 if (!done && !zoom.equals("")) {
                     System.out.println(zoom);
-                    zoomedImage = Toolkit.getDefaultToolkit().getImage(zoom.substring(0,zoom.indexOf(".")) + "x.png");
+                    zoomedImage = Toolkit.getDefaultToolkit().getImage(empireName + "Cards/" + zoom.substring(0,zoom.indexOf(".")) + "x.png");
                     done = true;
                 }
             }
@@ -155,8 +188,7 @@ class Game extends JFrame{
         public void mouseEntered(MouseEvent e) {}
         public void mouseReleased(MouseEvent e) {
             if (e.getY() < 480 && dragging) {
-                hand.remove(dragCard);
-                deck.pop();
+                units.add(cardToEntity(hand.remove(dragCard).getCard()));
             }
             dragging = false;
         }
@@ -184,6 +216,7 @@ class Game extends JFrame{
         }
         public void mouseMoved (MouseEvent me) {}
     }
+    
     class ScrollComponentL extends JPanel implements MouseListener {
         ScrollComponentL() {
             this.addMouseListener(this);

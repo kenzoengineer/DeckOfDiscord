@@ -22,7 +22,6 @@ class Empire extends JFrame{
     this.add(gp);
     setVisible(true);
     
-   
   }
   
   public int empireCheck(){
@@ -47,7 +46,7 @@ class Empire extends JFrame{
   
   public void select(){
     if (empires == 1){
-      empireSelect = Toolkit.getDefaultToolkit().getImage("persia1.jpg");
+      empireSelect = Toolkit.getDefaultToolkit().getImage("persia.jpg");
       AudioPlayer.player.stop(audioStream);
       soundFile = "persia.au";
       try {
@@ -85,9 +84,6 @@ class Empire extends JFrame{
     }
   }
   
-  public void openGame(){
-    Game startGame = new  Game();
-  }
   class GamePanel extends JPanel implements MouseListener{
     GamePanel() {
       this.addMouseListener(this);
@@ -133,7 +129,7 @@ class Empire extends JFrame{
        // game.checkDeck(empires);
        // game.getDeck();
         //game.getCard();
-        Game game = new Game();
+        Game game = new Game(empireCheck());
         
       }
     }

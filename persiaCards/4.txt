@@ -1,0 +1,8 @@
+Rider
+mount.png
+10
+2
+1
+1
+1
+1
