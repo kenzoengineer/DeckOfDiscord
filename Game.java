@@ -79,24 +79,21 @@ class Game extends JFrame{
             g.setColor(Color.GREEN);
             g.drawImage(background, x,y,null);
             g.drawString(l, 20,400);
-            if (left) x++;
-            if (right) x--;
+            if (left && x < 0) x++;
+            if (right && x > -1485) x--;
+            g.setColor(dark);
+            g.fillRect(0, 0, 1366, 768);
             for (int i = 0; i < hand.size() && i < 5; i++) {
-                g.setColor(hand.get(i).color);
                 Image img = Toolkit.getDefaultToolkit().getImage(hand.get(i).picture);
                 if (!dragging || i != dragCard) {
-                    g.drawRect(25 + (i * 220), 500,145,200);
                     g.drawImage(img, 25 + (i * 220), 500, null);
                 } else {
                     g.drawImage(img, dx - offsetX, dy - offsetY, null);
                 }
             }
             if (!zoom.equals("")) {
-                g.drawImage(zoomedImage, 400, 200, null);
+                g.drawImage(zoomedImage, 400, 100, null);
             }
-            
-            g.setColor(dark);
-            g.fillRect(0, 0, 1366, 768);
             repaint();
         }
         
@@ -134,9 +131,9 @@ class Game extends JFrame{
                     dark = new Color(0,0,0,50);
                     zoom = hand.get(4).picture;
                 }
-                if (!done) {
-                    zoomedImage = Toolkit.getDefaultToolkit().getImage(zoom);
-                    zoomedImage = resize(zoomedImage,2);
+                if (!done && !zoom.equals("")) {
+                    System.out.println(zoom);
+                    zoomedImage = Toolkit.getDefaultToolkit().getImage(zoom.substring(0,zoom.indexOf(".")) + "x.png");
                     done = true;
                 }
             }
@@ -184,8 +181,8 @@ class Game extends JFrame{
     class ScrollComponentL extends JPanel implements MouseListener {
         ScrollComponentL() {
             this.addMouseListener(this);
-            setOpaque(false);
-            setBackground(new Color(0,0,0,0));
+            setBackground(new Color(0,0,0,255));
+            setVisible(true);
         }
         public void mouseExited(MouseEvent e) {
             left = false;
@@ -201,8 +198,8 @@ class Game extends JFrame{
     class ScrollComponentR extends JPanel implements MouseListener {
         ScrollComponentR() {
             this.addMouseListener(this);
-            setOpaque(false);
-            setBackground(new Color(0,0,0,0));
+            setBackground(new Color(0,0,0,255));
+            setVisible(true);
         }
         public void mouseExited(MouseEvent e) {
             right = false;

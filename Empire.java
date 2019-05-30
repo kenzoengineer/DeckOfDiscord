@@ -47,7 +47,7 @@ class Empire extends JFrame{
   
   public void select(){
     if (empires == 1){
-      empireSelect = Toolkit.getDefaultToolkit().getImage("persia1.jpg");
+      empireSelect = Toolkit.getDefaultToolkit().getImage("persia.jpg");
       AudioPlayer.player.stop(audioStream);
       soundFile = "persia.au";
       try {
