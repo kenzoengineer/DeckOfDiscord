@@ -15,6 +15,8 @@ class Game extends JFrame{
     boolean right = false;
     int dragCard;
     String zoom = "";
+    Entity runTheDeck;
+    //Empire getTheEmpire;
     Color dark = new Color(0,0,0,0);
     Image background = Toolkit.getDefaultToolkit().getImage("bg.png");
     Deck deck = new Deck();
@@ -49,13 +51,16 @@ class Game extends JFrame{
     }
     public void initGame() {
         //create deck of cards
-        for (int i = 0; i < 20; i++) {
-            deck.addCard(new Unit(Integer.toString((int) (Math.random() * 255)),"e",1,2,3,4,5,6));
-        }
+       runTheDeck=  new Entity("","",1,2,3,4,5,6);
+       //getTheEmpire= new Empire();
+      //runTheDeck.checkDeck(getTheEmpire.empireCheck());
+      runTheDeck.getDeck();
+      runTheDeck.getEntity();
         System.out.println(deck.toString());
     }
     
     public void addHand() {
+      
         hand.add(new DisplayCard(deck.pop()));
     }
     
@@ -151,6 +156,7 @@ class Game extends JFrame{
         public void mouseReleased(MouseEvent e) {
             if (e.getY() < 480 && dragging) {
                 hand.remove(dragCard);
+                deck.pop();
             }
             dragging = false;
         }

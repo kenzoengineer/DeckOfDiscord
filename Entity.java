@@ -12,13 +12,15 @@ class Entity extends Card {
   String name;
   String empireDeck;
   int whichEmpire;
+  int x=0;
   File myFile;
   Scanner input;
   String [] cardUse= new String [30]; 
-  ArrayList<Entity> deck = new ArrayList<>();
+  //ArrayList<Entity> deck = new ArrayList<>();
   
   public Entity(String name, String des, int h, int a, int r, int s, int p, int at) {
     super(name, des);
+    
     hp = h;
     armor = a;
     range = r;
@@ -28,22 +30,25 @@ class Entity extends Card {
   }
   public void getDeck(){
     try{
-      myFile = new File (empireDeck); 
+      myFile = new File ("persia.txt"); 
       input = new Scanner(myFile);
     } catch (Exception e) {}
-    for (int i=0; i<20; i++){
-       //deck.add(new Entity(input.next()));
-      cardUse[i]=input.next();
+    while(input.hasNext()){
+      String a= input.next();
+      System.out.print(a);
+      cardUse[x]=a;
+      x++;
     }
   }
-   public void getCard(){
+  public void getEntity(){
     try{
-      myFile = new File ("perisaCards/"+cardUse[1]+".txt"); 
+      myFile = new File ("persiaCards/"+cardUse[0]+".txt"); 
       input = new Scanner(myFile);
     } catch (Exception e) {}
     for (int i=0; i<8; i++){
       if (i==0){
         name=input.next();
+        System.out.println(name);
       }else if(i==1){
         des=input.next();
       }else if(i==2){
@@ -58,10 +63,13 @@ class Entity extends Card {
         piercing=Integer.parseInt(input.next());
       }else if(i==7){
         attackSpeed=Integer.parseInt(input.next());
-      }
+      }      
     }
-    deck.add(new Entity(name,des,hp,armor,range,speed,piercing,attackSpeed));
+    Game.deck.add(new Entity(name,des,hp,armor,range,speed,piercing,attackSpeed));
+    input.close();
   }
+  //public int sendEntity(){
+  //}
   public void checkDeck(int whichEmpire){
     if (whichEmpire==1){
       empireDeck=("persia.txt");

@@ -3,18 +3,26 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
-import org.w3c.dom.NameList;
 class Game extends JFrame{
     public String l = "";
     int x = 0;
     int y = 0;
+    int dx = 0;
+    int dy = 0;
+    int offsetX = 0;
+    int offsetY = 0;
     boolean left = false;
     boolean right = false;
+    int dragCard;
+    String zoom = "";
+    Color dark = new Color(0,0,0,0);
     Image background = Toolkit.getDefaultToolkit().getImage("bg.png");
     Deck deck = new Deck();
-    ArrayList<Card> hand = new ArrayList<>();
+    Image zoomedImage;
+    ArrayList<DisplayCard> hand = new ArrayList<>();
     Game() {
-        hand.add(new Unit("","",1,2,3,4,5,6));
+        //add placeholder card
+        //hand.add(new DisplayCard(new Unit("","",1,2,3,4,5,6)));
         setSize(1366,768); 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
@@ -48,35 +56,48 @@ class Game extends JFrame{
     }
     
     public void addHand() {
-        hand.add(deck.pop());
+        hand.add(new DisplayCard(deck.pop()));
     }
     
-    class GamePanel extends JPanel implements KeyListener{
+    class GamePanel extends JPanel implements KeyListener, MouseListener, MouseMotionListener {
         GamePanel() {
             this.addKeyListener(this);
+            this.addMouseListener(this);
+            this.addMouseMotionListener(this);
             setFocusable(true);
             requestFocusInWindow();
-            setUndecorated(true);
+            setUndecorated(false);
+        }
+        
+        public Image resize(Image i,double scale) {
+            return i.getScaledInstance((int)(i.getWidth(null) * scale),(int) (i.getHeight(null) * scale), Image.SCALE_SMOOTH);
         }
         
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
             g.setColor(Color.GREEN);
-            //g.fillRect(x,y,200,200);
             g.drawImage(background, x,y,null);
             g.drawString(l, 20,400);
-            if (left) x++;
-            if (right) x--;
-            
+            if (left && x < 0) x++;
+            if (right && x > -1485) x--;
+            g.setColor(dark);
+            g.fillRect(0, 0, 1366, 768);
             for (int i = 0; i < hand.size() && i < 5; i++) {
-                g.fillRect(25 + (i * 220), 500, 150, 200);
+                Image img = Toolkit.getDefaultToolkit().getImage(hand.get(i).picture);
+                if (!dragging || i != dragCard) {
+                    g.drawImage(img, 25 + (i * 220), 500, null);
+                } else {
+                    g.drawImage(img, dx - offsetX, dy - offsetY, null);
+                }
             }
-            
-            g.setColor(Color.BLACK);
+            if (!zoom.equals("")) {
+                g.drawImage(zoomedImage, 400, 100, null);
+            }
             repaint();
         }
         
+        boolean done = false;
         public void keyTyped(KeyEvent e) {
             if (e.getKeyChar() == 'p') {
                 System.exit(0);
@@ -88,22 +109,86 @@ class Game extends JFrame{
                 addHand();
             }
         }
-        public void keyPressed(KeyEvent e) {}
-        public void keyReleased(KeyEvent e) {}
+        public void keyPressed(KeyEvent e) {
+            if (e.getKeyChar() == 'z') {
+                Point p = MouseInfo.getPointerInfo().getLocation();
+                double px = p.getX();
+                double py = p.getY();
+                //System.out.println(px + " " + py);
+                if (px > 169 && px < 318 && py > 525 && hand.size() > 0) {
+                    dark = new Color(0,0,0,50);
+                    zoom = hand.get(0).picture;                  
+                } else if (px > 389 && px < 535 && py > 525 && hand.size() > 1) {
+                    dark = new Color(0,0,0,50);
+                    zoom = hand.get(1).picture;                    
+                }  else if (px > 609 && px < 755 && py > 525 && hand.size() > 2) {
+                    dark = new Color(0,0,0,50);
+                    zoom = hand.get(2).picture;                   
+                }  else if (px > 829 && px < 975 && py > 525 && hand.size() > 3) {
+                    dark = new Color(0,0,0,50);
+                    zoom = hand.get(3).picture;
+                }  else if (px > 1049 && px < 1195 && py > 525 && hand.size() > 4) {
+                    dark = new Color(0,0,0,50);
+                    zoom = hand.get(4).picture;
+                }
+                if (!done && !zoom.equals("")) {
+                    System.out.println(zoom);
+                    zoomedImage = Toolkit.getDefaultToolkit().getImage(zoom.substring(0,zoom.indexOf(".")) + "x.png");
+                    done = true;
+                }
+            }
+        }
+        public void keyReleased(KeyEvent e) {
+            if (e.getKeyChar() == 'z') {
+                dark = new Color(0,0,0,0);
+                zoom = "";
+                done = false;
+            }
+        }
+        boolean dragging = false;
+        public void mouseExited(MouseEvent e) {}
+        public void mouseEntered(MouseEvent e) {}
+        public void mouseReleased(MouseEvent e) {
+            if (e.getY() < 480 && dragging) {
+                hand.remove(dragCard);
+            }
+            dragging = false;
+        }
+        public void mouseClicked(MouseEvent e) {}
+        public void mousePressed(MouseEvent e) {
+            System.out.println("Pressed. x: " +  e.getX() + " y: " + e.getY());
+            int px = e.getX();
+            int py = e.getY();
+            for (int i = 0; i < 5; i++) {
+                if (px > 25 + (i * 220) && px < 170 + (i * 220) && py > 500 && hand.size() > i) {
+                    dx = e.getX();
+                    dy = e.getY();
+                    offsetX = dx - (25 + (i * 220));
+                    System.out.println(i);
+                    offsetY = dy - 500;
+                    System.out.println(offsetX + " " + offsetY);
+                    dragging = true;
+                    dragCard = i;
+                }
+            }
+        }
+        public void mouseDragged (MouseEvent e) {
+            dx = e.getX();
+            dy = e.getY();       
+        }
+        public void mouseMoved (MouseEvent me) {}
     }
     class ScrollComponentL extends JPanel implements MouseListener {
         ScrollComponentL() {
             this.addMouseListener(this);
-            setOpaque(false);
-            setBackground(new Color(0,0,0,0));
+            setBackground(new Color(0,0,0,255));
+            setVisible(true);
         }
         public void mouseExited(MouseEvent e) {
-            l = "Mouse Exited";
             left = false;
         }
         public void mouseEntered(MouseEvent e) {
             Point p = new Point(e.getLocationOnScreen());
-            l = (p.toString());
             left = true;
         }
         public void mouseReleased(MouseEvent e) {}
@@ -113,16 +198,14 @@ class Game extends JFrame{
     class ScrollComponentR extends JPanel implements MouseListener {
         ScrollComponentR() {
             this.addMouseListener(this);
-            setOpaque(false);
-            setBackground(new Color(0,0,0,0));
+            setBackground(new Color(0,0,0,255));
+            setVisible(true);
         }
         public void mouseExited(MouseEvent e) {
-            l = "Mouse Exited";
             right = false;
         }
         public void mouseEntered(MouseEvent e) {
             Point p = new Point(e.getLocationOnScreen());
-            l = (p.toString());
             right = true;
         }
         public void mouseReleased(MouseEvent e) {}

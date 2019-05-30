@@ -47,7 +47,7 @@ class Empire extends JFrame{
   
   public void select(){
     if (empires == 1){
-      empireSelect = Toolkit.getDefaultToolkit().getImage("persia1.jpg");
+      empireSelect = Toolkit.getDefaultToolkit().getImage("persia.jpg");
       AudioPlayer.player.stop(audioStream);
       soundFile = "persia.au";
       try {
@@ -127,9 +127,9 @@ class Empire extends JFrame{
         System.out.print("back"+"\n");
         empireSelect = Toolkit.getDefaultToolkit().getImage("select.jpg");
       }else if (px < 328 && px > 76 && py < 534 && py > 458){
+        System.out.println("aaaa");
+        dispose();
         Game game = new Game();
-        //Entity game = new Entity("","",1,2,3,4,5,6);
-        //game.checkEmpire();
       }
     }
     public void paintComponent(Graphics g) {

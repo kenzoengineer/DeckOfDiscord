@@ -8,6 +8,8 @@ class Entity extends Card {
   int speed;
   int piercing;
   int attackSpeed;
+  String des;
+  String name;
   String empireDeck;
   int whichEmpire;
   File myFile;
@@ -42,25 +44,23 @@ class Entity extends Card {
     for (int i=0; i<8; i++){
       if (i==0){
         name=input.next();
-      }else if(i=1){
+      }else if(i==1){
         des=input.next();
-      }else if(i=2){
-        hp=input.next();
-      }else if(i=3){
-        armor=input.next();
-      }else if(i=4){
-        range=input.next();
-      }else if(i=5){
-        speed=input.next();
-      }else if(i=6){
-        piercing=input.next();
-      }else if(i=7){
-        attackSpeed=input.next();
+      }else if(i==2){
+        hp=Integer.parseInt(input.next());
+      }else if(i==3){
+        armor=Integer.parseInt(input.next());
+      }else if(i==4){
+        range=Integer.parseInt(input.next());
+      }else if(i==5){
+        speed=Integer.parseInt(input.next());
+      }else if(i==6){
+        piercing=Integer.parseInt(input.next());
+      }else if(i==7){
+        attackSpeed=Integer.parseInt(input.next());
       }
-      
-      //cardUse[i]=input.next();
     }
-    deck.add(new Entity());
+    deck.add(new Entity(name,des,hp,armor,range,speed,piercing,attackSpeed));
   }
   public void checkDeck(int whichEmpire){
     if (whichEmpire==1){

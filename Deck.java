@@ -1,17 +1,17 @@
 import java.util.ArrayList;
 class Deck {
     //create the deck
-    ArrayList<Card> deck;
+    ArrayList<Entity> deck;
     
     public Deck() {
-        deck = new ArrayList<Card>();
+        deck = new ArrayList<Entity>();
     }
     
     /**
      * add a card to the bottom of the deck
      * @param c the card to be added
      */
-    public void addCard(Card c) {
+    public void addCard(Entity c) {
         deck.add(c);
     }
     
@@ -32,10 +32,10 @@ class Deck {
     }
     
     public void shuffle() {
-        ArrayList<Card> temp = new ArrayList<>(deck);
+        ArrayList<Entity> temp = new ArrayList<>(deck);
         deck.clear();
         while (temp.size() > 0) {
-            Card c = temp.remove((int)(Math.random() * temp.size()));
+            Entity c = temp.remove((int)(Math.random() * temp.size()));
             deck.add(c);
         }
     }
