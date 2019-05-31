@@ -29,17 +29,17 @@ class Empire extends JFrame{
   
   public void abilty(){
     if (empires == 1){
-      Persia nation = new Persia();
-      nation.effect();
+      //Persia nation = new Persia();
+      //nation.effect();
     }else if (empires == 2){
-      China nation = new China();
-      nation.effect();
+      //China nation = new China();
+      //nation.effect();
     }else if (empires == 3){
-      Mexico nation = new Mexico();
-      nation.effect();
+      //Mexico nation = new Mexico();
+      //nation.effect();
     }else if (empires == 4){
-      Mars nation = new Mars();
-      nation.effect();
+      //Mars nation = new Mars();
+      //nation.effect();
     }
   }
   
