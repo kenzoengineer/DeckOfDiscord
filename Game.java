@@ -164,6 +164,7 @@ class Game extends JFrame{
             }
             if (age==2){
                 imageBack="ageBackground.jpg";
+                background = Toolkit.getDefaultToolkit().getImage(imageBack);
             }
             
             repaint();
