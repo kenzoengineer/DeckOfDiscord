@@ -3,4 +3,7 @@ class Special extends Card {
     public Special(String a, String b) {
         super(a,b);
     }
+    public int changeAge(int age){
+      return age++;
+    }
 }
