@@ -1,4 +1,4 @@
-class Base extends Game {
+class Base{
   int health = 200;
   int turretDamage=0;
   int turretSpeed=0;

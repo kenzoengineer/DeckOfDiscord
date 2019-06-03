@@ -43,7 +43,7 @@ class Game extends JFrame{
         zoom = "";
         left = false;
         right = false;
-        background = Toolkit.getDefaultToolkit().getImage("bg.png");
+        background = Toolkit.getDefaultToolkit().getImage("forest.jpg");
         deck = new Deck();
         dark = new Color(0,0,0,0);
         hand = new ArrayList<>();
@@ -136,6 +136,7 @@ class Game extends JFrame{
                 g.drawImage(img, x + 100 + (units.get(i).getX()/10), 400, null);
                 units.get(i).setX(units.get(i).getX() + 1);
             }
+            
             
             for (int i = 0; i < hand.size() && i < 5; i++) {
                 Image img = Toolkit.getDefaultToolkit().getImage(empireName + "Cards/" + hand.get(i).picture);
