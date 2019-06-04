@@ -16,6 +16,7 @@ class Game extends JFrame{
     boolean right;
     int dragCard;
     int empireNumber;
+    int mana;
     String empireName;
     String zoom;
     String imageBack;
@@ -131,6 +132,11 @@ class Game extends JFrame{
             return new Entity(name,des,hp,armor,range,speed,price,attackSpeed);
         }
         
+        public void enemyKilled() {
+          
+        
+        }
+        
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
@@ -168,7 +174,6 @@ class Game extends JFrame{
             }
             if (age==2){
                 imageBack="ageBackground.jpg";
-                background = Toolkit.getDefaultToolkit().getImage(imageBack);
             }
             
             repaint();
@@ -232,9 +237,14 @@ class Game extends JFrame{
         
         boolean dragging = false;
         public void mouseReleased(MouseEvent e) {
-            if (e.getY() < 480 && dragging) {
-                units.add(cardToEntity(hand.remove(dragCard).getCard()));
+            if (e.getY() < 480 && dragging){
+              Unit look = hand.get(dragCard).getCard();
+              if (look.getPrice()<=mana){
+                mana=mana-look.getPrice();
+                Unit c = hand.remove(dragCard).getCard();
+                units.add(cardToEntity(c));
                 placedCount++;
+              }dragging = false;
             }
             dragging = false;
         }
