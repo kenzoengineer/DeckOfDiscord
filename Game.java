@@ -30,6 +30,7 @@ class Game extends JFrame{
     
     Game(int e) {
         enemy = new ArrayList<>();
+        //testing enemy
         enemy.add(new Entity("Buffboy","tank.png",1,2,3,4,5,6));
         
         empireNumber = e;
