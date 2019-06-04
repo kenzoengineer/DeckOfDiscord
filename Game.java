@@ -25,10 +25,13 @@ class Game extends JFrame{
     Image zoomedImage;
     ArrayList<DisplayCard> hand;
     ArrayList<Entity> units;
-    
+    ArrayList<Entity> enemy;
     boolean stop;
     
     Game(int e) {
+        enemy = new ArrayList<>();
+        enemy.add(new Entity("Buffboy","tank.png",1,2,3,4,5,6));
+        
         empireNumber = e;
         imageBack="forest.jpg";
         switch (e) {
@@ -150,6 +153,13 @@ class Game extends JFrame{
                 }
             }
             
+            for (int i = 0; i < enemy.size(); i++) {
+                Image img = Toolkit.getDefaultToolkit().getImage(empireName + "Cards/" + enemy.get(i).des.substring(0,enemy.get(i).des.indexOf(".")) + "p.png");
+                g.drawImage(img, x + 2000 + (enemy.get(i).getX()/10), 400, null);
+                enemy.get(i).setX(enemy.get(i).getX() - enemy.get(i).getSpeed());
+            }
+            
+            
             for (int i = 0; i < hand.size() && i < 5; i++) {
                 Image img = Toolkit.getDefaultToolkit().getImage(empireName + "Cards/" + hand.get(i).picture);
                 if (!dragging || i != dragCard) {
@@ -168,8 +178,8 @@ class Game extends JFrame{
             }
             if (age==2){
                 imageBack="ageBackground.jpg";
-                background = Toolkit.getDefaultToolkit().getImage(imageBack);
             }
+            
             
             repaint();
         }
