@@ -30,6 +30,13 @@ class Game extends JFrame{
     boolean stop;
     
     Game(int e) {
+<<<<<<< HEAD
+=======
+        enemy = new ArrayList<>();
+        //testing enemy
+        enemy.add(new Entity("Buffboy","tank.png",1,2,3,4,5,6));
+        
+>>>>>>> 855b7248ba39e65525ec9da8274db0e761abafe8
         empireNumber = e;
         imageBack="forest.jpg";
         switch (e) {
