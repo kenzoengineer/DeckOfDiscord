@@ -3,7 +3,7 @@ class Unit extends Card {
     int armor;
     int range;
     int speed;
-    int piercing;
+    int price;
     int attackSpeed;
     
     public Unit(String name, String des, int h, int a, int r, int s, int p, int at) {
@@ -12,7 +12,7 @@ class Unit extends Card {
         armor = a;
         range = r;
         speed = s;
-        piercing = p;
+        price = p;
         attackSpeed = at;
     }
     
@@ -48,12 +48,12 @@ class Unit extends Card {
         this.speed = speed;
     }
 
-    public int getPiercing() {
-        return piercing;
+    public int getPrice() {
+        return price;
     }
 
-    public void setPiercing(int piercing) {
-        this.piercing = piercing;
+    public void setPiercing(int price) {
+        this.price = price;
     }
 
     public int getAttackSpeed() {
