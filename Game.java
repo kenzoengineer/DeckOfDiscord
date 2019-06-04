@@ -26,6 +26,8 @@ class Game extends JFrame{
     ArrayList<DisplayCard> hand;
     ArrayList<Entity> units;
     
+    boolean stop;
+    
     Game(int e) {
         empireNumber = e;
         imageBack="forest.jpg";
@@ -53,6 +55,7 @@ class Game extends JFrame{
         dark = new Color(0,0,0,0);
         hand = new ArrayList<>();
         units = new ArrayList<>();
+        stop = false;
         
         setSize(1366,768); 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -123,9 +126,9 @@ class Game extends JFrame{
             int armor = c.getArmor();
             int range = c.getRange();
             int speed = c.getSpeed();
-            int piercing = c.getPiercing();
+            int price = c.getPrice();
             int attackSpeed = c.getAttackSpeed();
-            return new Entity(name,des,hp,armor,range,speed,piercing,attackSpeed);
+            return new Entity(name,des,hp,armor,range,speed,price,attackSpeed);
         }
         
         @Override
@@ -141,8 +144,9 @@ class Game extends JFrame{
                 Image img = Toolkit.getDefaultToolkit().getImage(empireName + "Cards/" + units.get(i).des.substring(0,units.get(i).des.indexOf(".")) + "p.png");
                 g.drawImage(img, x + 100 + (units.get(i).getX()/10), 400, null);
                 units.get(i).setX(units.get(i).getX() + units.get(i).getSpeed());
-                if (i < (units.size() - 1) && units.size() > 1 && units.get(i).getX() - units.get(i + 1).getX() < 800) {
-                    units.get(i + 1).setX(units.get(i).getX() - 1000);
+                if (stop) units.get(0).setX(units.get(0).getX() - units.get(0).getSpeed());
+                if (i < (units.size() - 1) && units.size() > 1 && units.get(i).getX() - units.get(i + 1).getX() < 1100) {
+                    units.get(i + 1).setX(units.get(i).getX() - 1100);
                 }
             }
             
@@ -160,7 +164,7 @@ class Game extends JFrame{
             }
             if (placedCount==5){
                 age++;
-                
+                background = Toolkit.getDefaultToolkit().getImage(imageBack);
             }
             if (age==2){
                 imageBack="ageBackground.jpg";
@@ -179,8 +183,6 @@ class Game extends JFrame{
             }
             if (e.getKeyChar() == 's') {
                 addHand();
-            }
-            if (e.getKeyChar() == 'd') {
             }
         }
         
@@ -211,6 +213,9 @@ class Game extends JFrame{
                     done = true;
                 }
             }
+            if (e.getKeyChar() == 'd') {
+                stop = true;
+            }
         }
         
         public void keyReleased(KeyEvent e) {
@@ -218,6 +223,9 @@ class Game extends JFrame{
                 dark = new Color(0,0,0,0);
                 zoom = "";
                 done = false;
+            }
+            if (e.getKeyChar() == 'd') {
+                stop = false;
             }
         }
         
