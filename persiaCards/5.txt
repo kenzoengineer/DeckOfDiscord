@@ -1,0 +1,8 @@
+knight
+knight.png
+40
+5
+1
+3
+30
+15
