@@ -32,8 +32,8 @@ class Game extends JFrame{
     
     Game(int e) {
         enemy = new ArrayList<>();
-        enemy.add(new Entity("Buffboy","tank.png",1,2,3,4,5,6));
-        enemy.get(0).setX(27320);
+        enemy.add(new Entity("Buffboy","tank.png",1,1,1,1,1,1));
+        enemy.get(0).setX(2732);
         empireNumber = e;
         imageBack="forest.jpg";
         switch (e) {
@@ -152,26 +152,25 @@ class Game extends JFrame{
             if (right && x > -1485) x--;
             g.setColor(dark);
             g.fillRect(0, 0, 1366, 768);
-            if (units.size() > 0 && enemy.size() > 0 && ((units.get(0).getX() + enemy.get(0).getX())) < 200) {
-                units.get(0).setX(units.get(0).getX() - units.get(0).getSpeed());
-                enemy.get(0).setX(enemy.get(0).getX() - enemy.get(0).getSpeed());
-                stop = true;
+            if (units.size() > 0 && enemy.size() > 0 && (enemy.get(0).getX() - units.get(0).getX()) < 200) {
+                units.get(0).setStop(true);
+                enemy.get(0).setStop(true);
             }
             
             for (int i = 0; i < enemy.size(); i++) {
                  Image img = Toolkit.getDefaultToolkit().getImage(empireName + "Cards/" + enemy.get(i).des.substring(0,enemy.get(i).des.indexOf(".")) + "p.png");
-                 g.drawImage(img, x + (enemy.get(i).getX()/10), 400, null);
+                 g.drawImage(img, x + (enemy.get(i).getX()), 400, null);
+                 if (!enemy.get(i).getStop()) enemy.get(i).setX(enemy.get(i).getX() - enemy.get(i).getSpeed());
                  if (stop) enemy.get(0).setX(enemy.get(0).getX() + enemy.get(0).getSpeed());
-                 enemy.get(i).setX(enemy.get(i).getX() - enemy.get(i).getSpeed());
              }
  
             for (int i = 0; i < units.size(); i++) {
                 Image img = Toolkit.getDefaultToolkit().getImage(empireName + "Cards/" + units.get(i).des.substring(0,units.get(i).des.indexOf(".")) + "p.png");
-                g.drawImage(img, x + 100 + (units.get(i).getX()/10), 400, null);
-                units.get(i).setX(units.get(i).getX() + units.get(i).getSpeed());
-                if (stop) units.get(0).setX(units.get(0).getX() - units.get(0).getSpeed());
-                if (i < (units.size() - 1) && units.size() > 1 && units.get(i).getX() - units.get(i + 1).getX() < 1100) {
-                    units.get(i + 1).setX(units.get(i).getX() - 1100);
+                g.drawImage(img, x + (units.get(i).getX()), 400, null);
+                if (!units.get(i).getStop()) units.get(i).setX(units.get(i).getX() + units.get(i).getSpeed());
+                //unit unit collision
+                if ((i < units.size() - 1) && units.get(i + 1).getX() - units.get(i).getX() > -200) {
+                    units.get(i + 1).setX(units.get(i).getX() - 200);
                 }
             }
             
@@ -260,7 +259,10 @@ class Game extends JFrame{
                 }
             }
             if (e.getKeyChar() == 'd') {
-                stop = true;
+                units.get(0).setStop(true);
+            }
+            if (e.getKeyChar() == 'l') {
+                units.remove(0);
             }
         }
         
@@ -271,7 +273,7 @@ class Game extends JFrame{
                 done = false;
             }
             if (e.getKeyChar() == 'd') {
-                stop = false;
+                units.get(0).setStop(false);
             }
         }
         
