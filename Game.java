@@ -110,7 +110,6 @@ class Game extends JFrame{
         } catch (FileNotFoundException e) {
             System.out.println("File not found.");
         }
-        System.out.println(deck.toString());
     }
     
     public void addHand() {
