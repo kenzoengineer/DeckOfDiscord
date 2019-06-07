@@ -10,6 +10,7 @@ class Entity {
   int speed;
   int piercing;
   int attackSpeed;
+  boolean stop;
   
   int x;
 
@@ -23,6 +24,7 @@ class Entity {
         piercing = p;
         attackSpeed = at;
         x = 0;
+        stop = false;
     }
     public int getHp() {
         return hp;
@@ -87,5 +89,12 @@ class Entity {
     public void setX(int x) {
         this.x = x;
     }
-  
+    
+    public boolean getStop() {
+        return stop;
+    }
+    
+    public void setStop(boolean stop) {
+        this.stop = stop;
+    }
 }

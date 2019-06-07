@@ -4,7 +4,7 @@ class Unit extends Card {
     int range;
     int speed;
     int price;
-    int attackSpeed;
+    int attack;
     
     public Unit(String name, String des, int h, int a, int r, int s, int p, int at) {
         super(name, des);
@@ -13,7 +13,7 @@ class Unit extends Card {
         range = r;
         speed = s;
         price = p;
-        attackSpeed = at;
+        attack = at;
     }
     
     public int getHp() {
@@ -56,11 +56,11 @@ class Unit extends Card {
         this.price = price;
     }
 
-    public int getAttackSpeed() {
-        return attackSpeed;
+    public int getAttack() {
+        return attack;
     }
 
-    public void setAttackSpeed(int attackSpeed) {
-        this.attackSpeed = attackSpeed;
+    public void getAttack(int attack) {
+        this.attack = attack;
     }
 }

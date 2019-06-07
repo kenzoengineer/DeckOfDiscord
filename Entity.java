@@ -9,7 +9,7 @@ class Entity {
   int range;
   int speed;
   int piercing;
-  int attackSpeed;
+  int attack;
   boolean stop;
   
   int x;
@@ -22,7 +22,7 @@ class Entity {
         range = r;
         speed= s;
         piercing = p;
-        attackSpeed = at;
+        attack = at;
         x = 0;
         stop = false;
     }
@@ -58,12 +58,12 @@ class Entity {
         this.piercing = piercing;
     }
 
-    public int getAttackSpeed() {
-        return attackSpeed;
+    public int getAttack() {
+        return attack;
     }
 
-    public void setAttackSpeed(int attackSpeed) {
-        this.attackSpeed = attackSpeed;
+    public void setAttackSpeed(int attack) {
+        this.attack = attack;
     }
 
     public String getDes() {
