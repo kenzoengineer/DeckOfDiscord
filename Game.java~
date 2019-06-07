@@ -33,6 +33,7 @@ class Game extends JFrame{
     ArrayList<DisplayCard> hand;
     ArrayList<Entity> units;
     ArrayList<Entity> enemy;
+    double startTime;
     
     Game(int e) {
         empireNumber = e;
@@ -64,8 +65,13 @@ class Game extends JFrame{
         hand = new ArrayList<>();
         units = new ArrayList<>();
         enemy = new ArrayList<>();
+        startTime = 0;
+        enemy.add(new Entity("Buffboy","tank.png",1,1,1,1,1,1));
+        enemy.add(new Entity("Buffboy","tank.png",1,1,1,1,1,1));
         enemy.add(new Entity("Buffboy","tank.png",1,1,1,1,1,1));
         enemy.get(0).setX(2732);
+        enemy.get(1).setX(2932);
+        enemy.get(2).setX(3332);
         
         setSize(1366,768); 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -135,13 +141,42 @@ class Game extends JFrame{
             int range = c.getRange();
             int speed = c.getSpeed();
             int price = c.getPrice();
-            int attackSpeed = c.getAttackSpeed();
-            return new Entity(name,des,hp,armor,range,speed,price,attackSpeed);
+            int attack = c.getAttack();
+            return new Entity(name,des,hp,armor,range,speed,price,attack);
+        }
+        public void changeAge() {
+            if (placedCount==5){
+                age = 2;
+                background = Toolkit.getDefaultToolkit().getImage(imageBack);
+            }else if(placedCount==10){
+                age = 3;
+                background = Toolkit.getDefaultToolkit().getImage(imageBack);
+            }else if(placedCount==15){
+                age = 4;
+                background = Toolkit.getDefaultToolkit().getImage(imageBack);
+            }else if(placedCount==20){
+                age = 5;
+                background = Toolkit.getDefaultToolkit().getImage(imageBack);
+            }
+            if (age==2){
+                imageBack="ageBackground.jpg";
+                ageMultiplier=4;
+                if (deck.deck.size() >0){
+                    deck.deck.clear();
+                    initGame();
+                }
+            }else if (age==3){
+                imageBack="ageBackground3.jpg";
+            }else if (age==4){
+                imageBack="ageBackground4.jpg";
+            }else if (age==5){
+                imageBack="ageBackground5.jpg";
+            }
         }
         
-        public void enemyKilled() {
-          
-        
+        public void attack() {
+            enemy.get(0).setHp(enemy.get(0).getHp() - units.get(0).getAttack());
+            units.get(0).setHp(units.get(0).getHp() - enemy.get(0).getAttack());
         }
         
         @Override
@@ -155,6 +190,10 @@ class Game extends JFrame{
             if (units.size() > 0 && enemy.size() > 0 && (enemy.get(0).getX() - units.get(0).getX()) < 200) {
                 units.get(0).setStop(true);
                 enemy.get(0).setStop(true);
+                startTime = System.nanoTime();
+            } else {
+                if (units.size() > 0) units.get(0).setStop(false);
+                if (enemy.size() > 0) enemy.get(0).setStop(false);
             }
             
             for (int i = 0; i < enemy.size(); i++) {
@@ -185,35 +224,21 @@ class Game extends JFrame{
             if (!zoom.equals("")) {
                 g.drawImage(zoomedImage, 400, 100, null);
             }
-            if (placedCount==5){
-                age = 2;
-                background = Toolkit.getDefaultToolkit().getImage(imageBack);
-            }else if(placedCount==10){
-                age = 3;
-                background = Toolkit.getDefaultToolkit().getImage(imageBack);
-            }else if(placedCount==15){
-                age = 4;
-                background = Toolkit.getDefaultToolkit().getImage(imageBack);
-            }else if(placedCount==20){
-                age = 5;
-                background = Toolkit.getDefaultToolkit().getImage(imageBack);
+            if (placedCount % 5 == 0) {
+                changeAge();
             }
-            if (age==2){
-                imageBack="ageBackground.jpg";
-                ageMultiplier=4;
-                if (deck.deck.size() >0){
-                  deck.deck.clear();
-                  initGame();
+            double stopTime = 0.0;
+            if (units.size() > 0 && enemy.size() > 0 && units.get(0).getStop() && enemy.get(0).getStop()) {
+                System.out.println((startTime - stopTime) / 1000000000);
+                stopTime = System.nanoTime()/1000000000.0;
+                if ((startTime - stopTime) / 1000000000 > 1) {
+                    attack();
+                    System.out.println("attack!");
+                    startTime = System.nanoTime()/1000000000.0;
                 }
-            }else if (age==3){
-              imageBack="ageBackground3.jpg";
-            }else if (age==4){
-              imageBack="ageBackground4.jpg";
-            }else if (age==5){
-              imageBack="ageBackground5.jpg";
             }
-            
-            
+            if (units.size() > 0 && units.get(0).getHp() <= 0) units.remove(0);
+            if (enemy.size() > 0 && enemy.get(0).getHp() <= 0) enemy.remove(0);
             repaint();
         }
         

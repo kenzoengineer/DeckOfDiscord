@@ -1,0 +1,8 @@
+SteamBiker
+bike.png
+75
+10
+1
+15
+90
+10

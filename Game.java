@@ -145,16 +145,16 @@ class Game extends JFrame{
             return new Entity(name,des,hp,armor,range,speed,price,attack);
         }
         public void changeAge() {
-            if (placedCount==5){
+            if (placedCount==10){
                 age = 2;
                 background = Toolkit.getDefaultToolkit().getImage(imageBack);
-            }else if(placedCount==10){
+            }else if(placedCount==20){
                 age = 3;
                 background = Toolkit.getDefaultToolkit().getImage(imageBack);
-            }else if(placedCount==15){
+            }else if(placedCount==30){
                 age = 4;
                 background = Toolkit.getDefaultToolkit().getImage(imageBack);
-            }else if(placedCount==20){
+            }else if(placedCount==40){
                 age = 5;
                 background = Toolkit.getDefaultToolkit().getImage(imageBack);
             }
@@ -167,6 +167,11 @@ class Game extends JFrame{
                 }
             }else if (age==3){
                 imageBack="ageBackground3.jpg";
+                ageMultiplier=8;
+                if (deck.deck.size() >0){
+                    deck.deck.clear();
+                    initGame();
+                }
             }else if (age==4){
                 imageBack="ageBackground4.jpg";
             }else if (age==5){

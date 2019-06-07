@@ -1,0 +1,8 @@
+Musket
+musket.png
+75
+10
+1
+1
+90
+10
