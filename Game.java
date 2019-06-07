@@ -1,3 +1,8 @@
+//s draw card
+//z zoom in
+//l pop first unit
+//p end game
+
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
@@ -27,12 +32,8 @@ class Game extends JFrame{
     ArrayList<DisplayCard> hand;
     ArrayList<Entity> units;
     ArrayList<Entity> enemy;
-    boolean stop;
     
     Game(int e) {
-        enemy = new ArrayList<>();
-        enemy.add(new Entity("Buffboy","tank.png",1,1,1,1,1,1));
-        enemy.get(0).setX(2732);
         empireNumber = e;
         imageBack="forest.jpg";
         switch (e) {
@@ -60,7 +61,9 @@ class Game extends JFrame{
         dark = new Color(0,0,0,0);
         hand = new ArrayList<>();
         units = new ArrayList<>();
-        stop = false;
+        enemy = new ArrayList<>();
+        enemy.add(new Entity("Buffboy","tank.png",1,1,1,1,1,1));
+        enemy.get(0).setX(2732);
         
         setSize(1366,768); 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -89,7 +92,6 @@ class Game extends JFrame{
     }
     
     public void initGame() {
-        age=1;
         //load in the card list (1,1,1,2,2,2,2,2,3,4,4)
         File myFile;
         Scanner cardIn, cardLoader;
@@ -100,10 +102,9 @@ class Game extends JFrame{
                 int card = cardIn.nextInt();
                 cardLoader = new Scanner(new File(empireName + "Cards/" + card + ".txt"));
                 deck.addCard(new Unit(cardLoader.next(),cardLoader.next(),
-                    cardLoader.nextInt(),cardLoader.nextInt(),cardLoader.nextInt(),
-                    cardLoader.nextInt(),cardLoader.nextInt(),cardLoader.nextInt()));
+                cardLoader.nextInt(),cardLoader.nextInt(),cardLoader.nextInt(),
+                cardLoader.nextInt(),cardLoader.nextInt(),cardLoader.nextInt()));
             }
-            
         } catch (FileNotFoundException e) {
             System.out.println("File not found.");
         }
@@ -158,7 +159,6 @@ class Game extends JFrame{
                  Image img = Toolkit.getDefaultToolkit().getImage(empireName + "Cards/" + enemy.get(i).des.substring(0,enemy.get(i).des.indexOf(".")) + "p.png");
                  g.drawImage(img, x + (enemy.get(i).getX()), 400, null);
                  if (!enemy.get(i).getStop()) enemy.get(i).setX(enemy.get(i).getX() - enemy.get(i).getSpeed());
-                 if (stop) enemy.get(0).setX(enemy.get(0).getX() + enemy.get(0).getSpeed());
              }
  
             for (int i = 0; i < units.size(); i++) {
@@ -307,7 +307,7 @@ class Game extends JFrame{
         public void mouseExited(MouseEvent e) {}
         public void mouseEntered(MouseEvent e) {}
         public void mouseClicked(MouseEvent e) {}
-        public void mouseMoved (MouseEvent me) {}
+        public void mouseMoved (MouseEvent e) {}
     }
     
     class ScrollComponent extends JPanel implements MouseListener {
