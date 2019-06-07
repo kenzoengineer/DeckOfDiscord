@@ -26,17 +26,13 @@ class Game extends JFrame{
     Image zoomedImage;
     ArrayList<DisplayCard> hand;
     ArrayList<Entity> units;
-    
+    ArrayList<Entity> enemy;
     boolean stop;
     
     Game(int e) {
-<<<<<<< HEAD
-=======
         enemy = new ArrayList<>();
-        //testing enemy
         enemy.add(new Entity("Buffboy","tank.png",1,2,3,4,5,6));
-        
->>>>>>> 855b7248ba39e65525ec9da8274db0e761abafe8
+        enemy.get(0).setX(27320);
         empireNumber = e;
         imageBack="forest.jpg";
         switch (e) {
@@ -55,6 +51,7 @@ class Game extends JFrame{
         }
         
         placedCount = 0;
+        mana = 200;
         zoom = "";
         left = false;
         right = false;
@@ -152,7 +149,19 @@ class Game extends JFrame{
             if (right && x > -1485) x--;
             g.setColor(dark);
             g.fillRect(0, 0, 1366, 768);
+            if (units.size() > 0 && enemy.size() > 0 && ((units.get(0).getX() + enemy.get(0).getX())) < 200) {
+                units.get(0).setX(units.get(0).getX() - units.get(0).getSpeed());
+                enemy.get(0).setX(enemy.get(0).getX() - enemy.get(0).getSpeed());
+                stop = true;
+            }
             
+            for (int i = 0; i < enemy.size(); i++) {
+                 Image img = Toolkit.getDefaultToolkit().getImage(empireName + "Cards/" + enemy.get(i).des.substring(0,enemy.get(i).des.indexOf(".")) + "p.png");
+                 g.drawImage(img, x + (enemy.get(i).getX()/10), 400, null);
+                 if (stop) enemy.get(0).setX(enemy.get(0).getX() + enemy.get(0).getSpeed());
+                 enemy.get(i).setX(enemy.get(i).getX() - enemy.get(i).getSpeed());
+             }
+ 
             for (int i = 0; i < units.size(); i++) {
                 Image img = Toolkit.getDefaultToolkit().getImage(empireName + "Cards/" + units.get(i).des.substring(0,units.get(i).des.indexOf(".")) + "p.png");
                 g.drawImage(img, x + 100 + (units.get(i).getX()/10), 400, null);
@@ -176,16 +185,16 @@ class Game extends JFrame{
                 g.drawImage(zoomedImage, 400, 100, null);
             }
             if (placedCount==5){
-                age++;
+                age = 2;
                 background = Toolkit.getDefaultToolkit().getImage(imageBack);
             }else if(placedCount==10){
-                age++;
+                age = 3;
                 background = Toolkit.getDefaultToolkit().getImage(imageBack);
             }else if(placedCount==15){
-                age++;
+                age = 4;
                 background = Toolkit.getDefaultToolkit().getImage(imageBack);
             }else if(placedCount==20){
-                age++;
+                age = 5;
                 background = Toolkit.getDefaultToolkit().getImage(imageBack);
             }
             if (age==2){

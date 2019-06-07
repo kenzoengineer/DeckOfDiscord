@@ -22,6 +22,7 @@ class Game extends JFrame{
     int dragCard;
     int empireNumber;
     int mana;
+    int ageMultiplier;
     String empireName;
     String zoom;
     String imageBack;
@@ -52,7 +53,8 @@ class Game extends JFrame{
         }
         
         placedCount = 0;
-        mana = 200;
+        mana = 20000;
+        ageMultiplier=0;
         zoom = "";
         left = false;
         right = false;
@@ -100,7 +102,8 @@ class Game extends JFrame{
             cardIn = new Scanner(myFile);
             while (cardIn.hasNext()) {
                 int card = cardIn.nextInt();
-                cardLoader = new Scanner(new File(empireName + "Cards/" + card + ".txt"));
+                card= card + ageMultiplier;
+                cardLoader = new Scanner(new File(empireName + "Cards/" + card+ ".txt"));
                 deck.addCard(new Unit(cardLoader.next(),cardLoader.next(),
                 cardLoader.nextInt(),cardLoader.nextInt(),cardLoader.nextInt(),
                 cardLoader.nextInt(),cardLoader.nextInt(),cardLoader.nextInt()));
@@ -108,7 +111,6 @@ class Game extends JFrame{
         } catch (FileNotFoundException e) {
             System.out.println("File not found.");
         }
-        System.out.println(deck.toString());
     }
     
     public void addHand() {
@@ -198,6 +200,11 @@ class Game extends JFrame{
             }
             if (age==2){
                 imageBack="ageBackground.jpg";
+                ageMultiplier=4;
+                if (deck.deck.size() >0){
+                  deck.deck.clear();
+                  initGame();
+                }
             }else if (age==3){
               imageBack="ageBackground3.jpg";
             }else if (age==4){

@@ -1,0 +1,8 @@
+KingArthur
+king.png
+75
+10
+1
+1
+50
+10
