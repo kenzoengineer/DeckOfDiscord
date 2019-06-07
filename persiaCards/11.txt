@@ -1,8 +1,8 @@
-Engineer
-engineer.png
-75
-10
+SteamTank
+steamtank.png
+300
+30
 1
 1
-70
+150
 10

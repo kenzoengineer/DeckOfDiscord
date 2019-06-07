@@ -1,8 +1,8 @@
 Musket
 musket.png
-75
+200
 10
 1
 1
 90
-10
+30

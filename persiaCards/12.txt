@@ -1,8 +1,8 @@
 SteamBiker
 bike.png
-75
+10
 10
 1
-15
+100
 90
-10
+1
