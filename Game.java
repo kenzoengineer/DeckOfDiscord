@@ -10,6 +10,27 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Date;
+
+class Timer {
+    long elapsedTime;
+    long lastCheck;
+
+    public Timer() {
+        lastCheck = System.nanoTime();
+        elapsedTime = 0;
+    }
+
+    public void update() {
+        long currentT = System.nanoTime();
+        elapsedTime = currentT - lastCheck;
+        lastCheck = currentT;
+    }
+
+    public double getElapsedTime() {
+        return elapsedTime/1.0E9;
+    }
+}
+
 class Game extends JFrame{
     int placedCount;
     int x;
@@ -36,6 +57,7 @@ class Game extends JFrame{
     ArrayList<Entity> enemy;
     Date startDate;
     Date endDate;
+    Timer clock;
     Game(int e) {
         empireNumber = e;
         imageBack="forest.jpg";
@@ -55,7 +77,7 @@ class Game extends JFrame{
         }
         
         placedCount = 0;
-        mana = 20000;
+        mana = 2000;
         ageMultiplier=0;
         zoom = "";
         left = false;
@@ -68,6 +90,7 @@ class Game extends JFrame{
         enemy = new ArrayList<>();
         startDate = new Date();
         endDate = new Date();
+        clock = new Timer();
         enemy.add(new Entity("Buffboy","tank.png",2,3,1,1,20,1));
         enemy.add(new Entity("Buffboy","tank.png",2,3,1,1,20,1));
         enemy.add(new Entity("Buffboy","tank.png",2,3,1,1,20,1));
@@ -117,6 +140,7 @@ class Game extends JFrame{
                 cardLoader.nextInt(),cardLoader.nextInt(),cardLoader.nextInt(),
                 cardLoader.nextInt(),cardLoader.nextInt(),cardLoader.nextInt()));
             }
+            deck.shuffle();
         } catch (FileNotFoundException e) {
             System.out.println("File not found.");
         }
@@ -166,22 +190,22 @@ class Game extends JFrame{
                 ageMultiplier=4;
                 if (deck.deck.size() >0){
                     deck.deck.clear();
-                    initGame();
                 }
+                initGame();
             }else if (age==3){
                 imageBack="ageBackground3.jpg";
                 ageMultiplier=8;
                 if (deck.deck.size() >0){
                     deck.deck.clear();
-                    initGame();
                 }
+                initGame();
             }else if (age==4){
                 imageBack="ageBackground4.jpg";
                 ageMultiplier=12;
                 if (deck.deck.size() >0){
                     deck.deck.clear();
-                    initGame();
                 }
+                initGame();
             }else if (age==5){
                 imageBack="ageBackground5.jpg";
             }
@@ -191,7 +215,42 @@ class Game extends JFrame{
             enemy.get(0).setHp(enemy.get(0).getHp() - units.get(0).getAttack());
             units.get(0).setHp(units.get(0).getHp() - enemy.get(0).getAttack());
         }
-        
+        public void drawAll(Graphics g) {
+            for (int i = 0; i < enemy.size(); i++) {
+                Image img = Toolkit.getDefaultToolkit().getImage(empireName + "Cards/" + enemy.get(i).des.substring(0,enemy.get(i).des.indexOf(".")) + "p.png");
+                g.drawImage(img, x + (enemy.get(i).getX()), 400, null);
+                g.setColor(Color.RED);
+                g.fillOval(x + enemy.get(i).getX() + 73, 350, 30, 30);
+            }
+            for (int i = 0; i < units.size(); i++) {
+                Image img = Toolkit.getDefaultToolkit().getImage(empireName + "Cards/" + units.get(i).des.substring(0,units.get(i).des.indexOf(".")) + "p.png");
+                g.drawImage(img, x + (units.get(i).getX()), 400, null);
+                g.setColor(Color.GREEN);
+                g.fillOval(x + units.get(i).getX() + 73, 350, 30, 30);
+            }
+            for (int i = 0; i < hand.size() && i < 5; i++) {
+                Image img = Toolkit.getDefaultToolkit().getImage(empireName + "Cards/" + hand.get(i).picture);
+                if (!dragging || i != dragCard) {
+                    g.drawImage(img, 25 + (i * 220), 500, null);
+                } else {
+                    g.drawImage(img, dx - offsetX, dy - offsetY, null);
+                }
+            }
+            
+            //drawing mana
+            Graphics2D g2d = (Graphics2D) g;
+            g.setColor(Color.BLACK);
+            g.fillRect(853,33,195,15);
+            g.setColor(Color.BLUE);
+            g.fillRect(853,33,(int)(195 * (mana/2000.0)),15);
+            g.setColor(Color.WHITE);
+            g2d.setStroke(new BasicStroke(5));
+            g2d.drawRect(850,30,200,20);
+            g2d.setColor(Color.BLACK);
+            g2d.setFont(new Font("TimesRoman", Font.PLAIN, 20));
+            g2d.drawString("Mana: " + mana, 740, 47);
+        }
+        double timeSum = 0;
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
@@ -208,42 +267,26 @@ class Game extends JFrame{
                 if (enemy.size() > 0) enemy.get(0).setStop(false);
             }
             
-            for (int i = 0; i < enemy.size(); i++) {
-                 Image img = Toolkit.getDefaultToolkit().getImage(empireName + "Cards/" + enemy.get(i).des.substring(0,enemy.get(i).des.indexOf(".")) + "p.png");
-                 g.drawImage(img, x + (enemy.get(i).getX()), 400, null);
-                 if (!enemy.get(i).getStop()) enemy.get(i).setX(enemy.get(i).getX() - enemy.get(i).getSpeed());
-                 //if (enemy.size() > 1 && units.size() > 0) System.out.println(enemy.get(1).getX() - enemy.get(0).getX());
-                 if ((i < enemy.size() - 1) && enemy.get(i + 1).getX() - enemy.get(i).getX() < 200) {
-                    enemy.get(i + 1).setX(enemy.get(i).getX() + 200);
+            drawAll(g);
+            
+            clock.update();
+            double elapsed = clock.getElapsedTime();
+            timeSum += elapsed;
+            if (timeSum > 0.01) {
+                for (int i = 0; i < enemy.size(); i++) {
+                     if (!enemy.get(i).getStop()) enemy.get(i).setX(enemy.get(i).getX() - enemy.get(i).getSpeed());
+                     if ((i < enemy.size() - 1) && enemy.get(i + 1).getX() - enemy.get(i).getX() < 200) {
+                        enemy.get(i + 1).setX(enemy.get(i).getX() + 200);
+                     }
                  }
-             }
- 
-            for (int i = 0; i < units.size(); i++) {
-                Image img = Toolkit.getDefaultToolkit().getImage(empireName + "Cards/" + units.get(i).des.substring(0,units.get(i).des.indexOf(".")) + "p.png");
-                g.drawImage(img, x + (units.get(i).getX()), 400, null);
-                if (!units.get(i).getStop()) units.get(i).setX(units.get(i).getX() + units.get(i).getSpeed());
-                //unit unit collision
-                if ((i < units.size() - 1) && units.get(i + 1).getX() - units.get(i).getX() > -200) {
-                    units.get(i + 1).setX(units.get(i).getX() - 200);
+
+                for (int i = 0; i < units.size(); i++) {
+                    if (!units.get(i).getStop()) units.get(i).setX(units.get(i).getX() + units.get(i).getSpeed());
+                    if ((i < units.size() - 1) && units.get(i + 1).getX() - units.get(i).getX() > -200) {
+                        units.get(i + 1).setX(units.get(i).getX() - 200);
+                    }
                 }
-            }
-            
-            for (int i = 0; i < hand.size() && i < 5; i++) {
-                Image img = Toolkit.getDefaultToolkit().getImage(empireName + "Cards/" + hand.get(i).picture);
-                if (!dragging || i != dragCard) {
-                    g.drawImage(img, 25 + (i * 220), 500, null);
-                } else {
-                    g.drawImage(img, dx - offsetX, dy - offsetY, null);
-                }
-            }
-            
-            if (!zoom.equals("")) {
-                g.drawImage(zoomedImage, 400, 100, null);
-            }
-            if (placedCount % 5 == 0) {
-                changeAge();
-            }
-            if (units.size() > 0 && enemy.size() > 0 && units.get(0).getStop() && enemy.get(0).getStop()) {
+                if (units.size() > 0 && enemy.size() > 0 && units.get(0).getStop() && enemy.get(0).getStop()) {
                 //System.out.println((endDate.getTime() - startDate.getTime())/1000);
                 endDate = new Date();
                 if (((endDate.getTime() - startDate.getTime())/1000)> 1) {
@@ -251,6 +294,15 @@ class Game extends JFrame{
                     System.out.println("attack!");
                     startDate = new Date();
                 }
+            }
+                timeSum = 0;
+            }
+            
+            if (!zoom.equals("")) {
+                g.drawImage(zoomedImage, 400, 100, null);
+            }
+            if (placedCount % 5 == 0) {
+                changeAge();
             }
             if (units.size() > 0 && units.get(0).getHp() <= 0) units.remove(0);
             if (enemy.size() > 0 && enemy.get(0).getHp() <= 0) enemy.remove(0);
