@@ -9,6 +9,7 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Date;
 class Game extends JFrame{
     int placedCount;
     int x;
@@ -33,8 +34,8 @@ class Game extends JFrame{
     ArrayList<DisplayCard> hand;
     ArrayList<Entity> units;
     ArrayList<Entity> enemy;
-    double startTime;
-    
+    Date startDate;
+    Date endDate;
     Game(int e) {
         empireNumber = e;
         imageBack="forest.jpg";
@@ -65,10 +66,11 @@ class Game extends JFrame{
         hand = new ArrayList<>();
         units = new ArrayList<>();
         enemy = new ArrayList<>();
-        startTime = 0;
-        enemy.add(new Entity("Buffboy","tank.png",1,1,1,1,1,1));
-        enemy.add(new Entity("Buffboy","tank.png",1,1,1,1,1,1));
-        enemy.add(new Entity("Buffboy","tank.png",1,1,1,1,1,1));
+        startDate = new Date();
+        endDate = new Date();
+        enemy.add(new Entity("Buffboy","tank.png",20,3,1,1,20,1));
+        enemy.add(new Entity("Buffboy","tank.png",20,3,1,1,20,1));
+        enemy.add(new Entity("Buffboy","tank.png",20,3,1,1,20,1));
         enemy.get(0).setX(2732);
         enemy.get(1).setX(2932);
         enemy.get(2).setX(3332);
@@ -195,7 +197,6 @@ class Game extends JFrame{
             if (units.size() > 0 && enemy.size() > 0 && (enemy.get(0).getX() - units.get(0).getX()) < 200) {
                 units.get(0).setStop(true);
                 enemy.get(0).setStop(true);
-                startTime = System.nanoTime();
             } else {
                 if (units.size() > 0) units.get(0).setStop(false);
                 if (enemy.size() > 0) enemy.get(0).setStop(false);
@@ -205,6 +206,10 @@ class Game extends JFrame{
                  Image img = Toolkit.getDefaultToolkit().getImage(empireName + "Cards/" + enemy.get(i).des.substring(0,enemy.get(i).des.indexOf(".")) + "p.png");
                  g.drawImage(img, x + (enemy.get(i).getX()), 400, null);
                  if (!enemy.get(i).getStop()) enemy.get(i).setX(enemy.get(i).getX() - enemy.get(i).getSpeed());
+                 //if (enemy.size() > 1 && units.size() > 0) System.out.println(enemy.get(1).getX() - enemy.get(0).getX());
+                 if ((i < enemy.size() - 1) && enemy.get(i + 1).getX() - enemy.get(i).getX() < 200) {
+                    enemy.get(i + 1).setX(enemy.get(i).getX() + 200);
+                 }
              }
  
             for (int i = 0; i < units.size(); i++) {
@@ -232,14 +237,13 @@ class Game extends JFrame{
             if (placedCount % 5 == 0) {
                 changeAge();
             }
-            double stopTime = 0.0;
             if (units.size() > 0 && enemy.size() > 0 && units.get(0).getStop() && enemy.get(0).getStop()) {
-                System.out.println((startTime - stopTime) / 1000000000);
-                stopTime = System.nanoTime()/1000000000.0;
-                if ((startTime - stopTime) / 1000000000 > 1) {
+                //System.out.println((endDate.getTime() - startDate.getTime())/1000);
+                endDate = new Date();
+                if (((endDate.getTime() - startDate.getTime())/1000)> 1) {
                     attack();
                     System.out.println("attack!");
-                    startTime = System.nanoTime()/1000000000.0;
+                    startDate = new Date();
                 }
             }
             if (units.size() > 0 && units.get(0).getHp() <= 0) units.remove(0);

@@ -1,0 +1,7 @@
+Sniper
+sniper.png
+100
+2
+1
+150
+90

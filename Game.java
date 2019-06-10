@@ -68,9 +68,9 @@ class Game extends JFrame{
         enemy = new ArrayList<>();
         startDate = new Date();
         endDate = new Date();
-        enemy.add(new Entity("Buffboy","tank.png",20,3,1,1,20,1));
-        enemy.add(new Entity("Buffboy","tank.png",20,3,1,1,20,1));
-        enemy.add(new Entity("Buffboy","tank.png",20,3,1,1,20,1));
+        enemy.add(new Entity("Buffboy","tank.png",2,3,1,1,20,1));
+        enemy.add(new Entity("Buffboy","tank.png",2,3,1,1,20,1));
+        enemy.add(new Entity("Buffboy","tank.png",2,3,1,1,20,1));
         enemy.get(0).setX(2732);
         enemy.get(1).setX(2932);
         enemy.get(2).setX(3332);
@@ -111,6 +111,7 @@ class Game extends JFrame{
             while (cardIn.hasNext()) {
                 int card = cardIn.nextInt();
                 card= card + ageMultiplier;
+                //System.out.print(card);
                 cardLoader = new Scanner(new File(empireName + "Cards/" + card+ ".txt"));
                 deck.addCard(new Unit(cardLoader.next(),cardLoader.next(),
                 cardLoader.nextInt(),cardLoader.nextInt(),cardLoader.nextInt(),
@@ -176,6 +177,11 @@ class Game extends JFrame{
                 }
             }else if (age==4){
                 imageBack="ageBackground4.jpg";
+                ageMultiplier=12;
+                if (deck.deck.size() >0){
+                    deck.deck.clear();
+                    initGame();
+                }
             }else if (age==5){
                 imageBack="ageBackground5.jpg";
             }

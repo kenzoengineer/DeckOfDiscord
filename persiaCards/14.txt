@@ -1,0 +1,7 @@
+tanker
+tanker.png
+500
+30
+1
+300
+50
