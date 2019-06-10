@@ -10,6 +10,7 @@ class Entity {
   int speed;
   int piercing;
   int attack;
+  int maxHP;
   boolean stop;
   
   int x;
@@ -25,6 +26,7 @@ class Entity {
         attack = at;
         x = 0;
         stop = false;
+        maxHP = h;
     }
     public int getHp() {
         return hp;
@@ -96,5 +98,13 @@ class Entity {
     
     public void setStop(boolean stop) {
         this.stop = stop;
+    }
+    
+    public void setMaxHP(int maxHP) {
+        this.maxHP = maxHP;
+    }
+    
+    public int getMaxHP() {
+        return maxHP;
     }
 }

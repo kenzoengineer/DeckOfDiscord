@@ -41,6 +41,7 @@ class Game extends JFrame{
     int offsetY;
     boolean left;
     boolean right;
+    boolean hideCards;
     int dragCard;
     int empireNumber;
     int mana;
@@ -82,6 +83,7 @@ class Game extends JFrame{
         zoom = "";
         left = false;
         right = false;
+        hideCards = false;
         background = Toolkit.getDefaultToolkit().getImage(imageBack);
         deck = new Deck();
         dark = new Color(0,0,0,0);
@@ -221,22 +223,33 @@ class Game extends JFrame{
                 g.drawImage(img, x + (enemy.get(i).getX()), 400, null);
                 g.setColor(Color.RED);
                 g.fillOval(x + enemy.get(i).getX() + 73, 350, 30, 30);
+                
+                g.setColor(Color.RED);
+                g.fillRect(x + enemy.get(i).getX(), 630, 145, 15);
+                g.setColor(Color.GREEN);
+                g.fillRect(x + enemy.get(i).getX(), 630, (int)(145 * (enemy.get(i).getHp()/(enemy.get(i).getMaxHP()*1.0))), 15);
             }
             for (int i = 0; i < units.size(); i++) {
                 Image img = Toolkit.getDefaultToolkit().getImage(empireName + "Cards/" + units.get(i).des.substring(0,units.get(i).des.indexOf(".")) + "p.png");
                 g.drawImage(img, x + (units.get(i).getX()), 400, null);
                 g.setColor(Color.GREEN);
                 g.fillOval(x + units.get(i).getX() + 73, 350, 30, 30);
+                
+                g.setColor(Color.RED);
+                g.fillRect(x + units.get(i).getX(), 630, 145, 15);
+                g.setColor(Color.GREEN);
+                g.fillRect(x + units.get(i).getX(), 630, (int)(145 * (units.get(i).getHp()/(units.get(i).getMaxHP()*1.0))), 15);
             }
-            for (int i = 0; i < hand.size() && i < 5; i++) {
-                Image img = Toolkit.getDefaultToolkit().getImage(empireName + "Cards/" + hand.get(i).picture);
-                if (!dragging || i != dragCard) {
-                    g.drawImage(img, 25 + (i * 220), 500, null);
-                } else {
-                    g.drawImage(img, dx - offsetX, dy - offsetY, null);
+            if (!hideCards) {
+                for (int i = 0; i < hand.size() && i < 5; i++) {
+                    Image img = Toolkit.getDefaultToolkit().getImage(empireName + "Cards/" + hand.get(i).picture);
+                    if (!dragging || i != dragCard) {
+                        g.drawImage(img, 25 + (i * 220), 500, null);
+                    } else {
+                        g.drawImage(img, dx - offsetX, dy - offsetY, null);
+                    }
                 }
             }
-            
             //drawing mana
             Graphics2D g2d = (Graphics2D) g;
             g.setColor(Color.BLACK);
@@ -355,6 +368,9 @@ class Game extends JFrame{
             if (e.getKeyChar() == 'l') {
                 units.remove(0);
             }
+            if (e.getKeyChar() == 'h') {
+                hideCards = true;
+            }
         }
         
         public void keyReleased(KeyEvent e) {
@@ -365,6 +381,9 @@ class Game extends JFrame{
             }
             if (e.getKeyChar() == 'd') {
                 units.get(0).setStop(false);
+            }
+            if (e.getKeyChar() == 'h') {
+                hideCards = false;
             }
         }
         
