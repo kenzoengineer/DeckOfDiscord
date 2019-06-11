@@ -93,10 +93,7 @@ class Game extends JFrame{
         startDate = new Date();
         endDate = new Date();
         clock = new Timer();
-        enemy.add(new Entity("Buffboy","tank.png",2,3,1,1,20,1));
-        enemy.add(new Entity("Buffboy","tank.png",2,3,1,1,20,1));
-        enemy.add(new Entity("Buffboy","tank.png",2,3,1,1,20,1));
-        
+
         setSize(1366,768); 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
@@ -134,7 +131,7 @@ class Game extends JFrame{
                 int card = cardIn.nextInt();
                 card= card + ageMultiplier;
                 //System.out.print(card);
-                cardLoader = new Scanner(new File(empireName + "Cards/" + card+ ".txt"));
+                cardLoader = new Scanner(new File("persiaCards/" + card+ ".txt"));
                 deck.addCard(new Unit(cardLoader.next(),cardLoader.next(),
                 cardLoader.nextInt(),cardLoader.nextInt(),cardLoader.nextInt(),
                 cardLoader.nextInt(),cardLoader.nextInt(),cardLoader.nextInt()));
@@ -213,7 +210,7 @@ class Game extends JFrame{
         public void newEnemy() {
             int card = (int)(Math.random() * 4);
             try {
-                Scanner cardLoader = new Scanner(new File(empireName + "Cards/" + (card + ageMultiplier) + ".txt"));
+                Scanner cardLoader = new Scanner(new File("persiaCards/" + (card + ageMultiplier) + ".txt"));
                 enemy.add(cardToEntity(new Unit(cardLoader.next(),cardLoader.next(),
                 cardLoader.nextInt(),cardLoader.nextInt(),cardLoader.nextInt(),
                 cardLoader.nextInt(),cardLoader.nextInt(),cardLoader.nextInt())));
@@ -229,7 +226,7 @@ class Game extends JFrame{
         }
         public void drawAll(Graphics g) {
             for (int i = 0; i < enemy.size(); i++) {
-                Image img = Toolkit.getDefaultToolkit().getImage(empireName + "Cards/" + enemy.get(i).des.substring(0,enemy.get(i).des.indexOf(".")) + "p.png");
+                Image img = Toolkit.getDefaultToolkit().getImage("persiaCards/" + enemy.get(i).des.substring(0,enemy.get(i).des.indexOf(".")) + "p.png");
                 g.drawImage(img, x + (enemy.get(i).getX()), 400, null);
                 g.setColor(Color.RED);
                 g.fillOval(x + enemy.get(i).getX() + 73, 350, 30, 30);
@@ -240,7 +237,7 @@ class Game extends JFrame{
                 g.fillRect(x + enemy.get(i).getX(), 630, (int)(145 * (enemy.get(i).getHp()/(enemy.get(i).getMaxHP()*1.0))), 15);
             }
             for (int i = 0; i < units.size(); i++) {
-                Image img = Toolkit.getDefaultToolkit().getImage(empireName + "Cards/" + units.get(i).des.substring(0,units.get(i).des.indexOf(".")) + "p.png");
+                Image img = Toolkit.getDefaultToolkit().getImage("persiaCards/" + units.get(i).des.substring(0,units.get(i).des.indexOf(".")) + "p.png");
                 g.drawImage(img, x + (units.get(i).getX()), 400, null);
                 g.setColor(Color.GREEN);
                 g.fillOval(x + units.get(i).getX() + 73, 350, 30, 30);
@@ -252,7 +249,7 @@ class Game extends JFrame{
             }
             if (!hideCards) {
                 for (int i = 0; i < hand.size() && i < 5; i++) {
-                    Image img = Toolkit.getDefaultToolkit().getImage(empireName + "Cards/" + hand.get(i).picture);
+                    Image img = Toolkit.getDefaultToolkit().getImage("persiaCards/" + hand.get(i).picture);
                     if (!dragging || i != dragCard) {
                         g.drawImage(img, 25 + (i * 220), 500, null);
                     } else {
@@ -273,7 +270,11 @@ class Game extends JFrame{
             g2d.setFont(new Font("TimesRoman", Font.PLAIN, 20));
             g2d.drawString("Mana: " + mana, 740, 47);
         }
+        
+        
         double timeSum = 0;
+        double enemySum = 0;
+        Timer enemyTimer = new Timer();
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
@@ -319,6 +320,17 @@ class Game extends JFrame{
                 }
             }
                 timeSum = 0;
+            }
+            
+            enemyTimer.update();
+            double enemyLapsed = enemyTimer.getElapsedTime();
+            enemySum += enemyLapsed;
+            if (enemySum > 4.0) {
+                //1 in 10 chance 
+                if ((int)(Math.random() * 10) == 5) {
+                    newEnemy();
+                    enemySum = 0;
+                }
             }
             
             if (!zoom.equals("")) {
@@ -371,7 +383,7 @@ class Game extends JFrame{
                 }
                 if (!done && !zoom.equals("")) {
                     System.out.println(zoom);
-                    zoomedImage = Toolkit.getDefaultToolkit().getImage(empireName + "Cards/" + zoom.substring(0,zoom.indexOf(".")) + "x.png");
+                    zoomedImage = Toolkit.getDefaultToolkit().getImage("persiaCards/" + zoom.substring(0,zoom.indexOf(".")) + "x.png");
                     done = true;
                 }
             }
@@ -403,13 +415,15 @@ class Game extends JFrame{
         boolean dragging = false;
         public void mouseReleased(MouseEvent e) {
             if (e.getY() < 480 && dragging){
-              Unit look = hand.get(dragCard).getCard();
-              if (look.getPrice()<=mana){
-                mana=mana-look.getPrice();
-                Unit c = hand.remove(dragCard).getCard();
-                units.add(cardToEntity(c));
-                placedCount++;
-              }dragging = false;
+                Unit look = hand.get(dragCard).getCard();
+                if (look.getPrice()<=mana){
+                    mana=mana-look.getPrice();
+                    Unit c = hand.remove(dragCard).getCard();
+                    units.add(cardToEntity(c));
+                    addHand();
+                    placedCount++;
+                }
+                dragging = false;
             }
             dragging = false;
         }
