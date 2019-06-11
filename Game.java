@@ -78,7 +78,7 @@ class Game extends JFrame{
         }
         
         placedCount = 0;
-        mana = 2000;
+        mana = 500;
         ageMultiplier=0;
         zoom = "";
         left = false;
@@ -204,6 +204,11 @@ class Game extends JFrame{
                 initGame();
             }else if (age==5){
                 imageBack="ageBackground5.jpg";
+                 ageMultiplier=16;
+                if (deck.deck.size() >0){
+                    deck.deck.clear();
+                }
+                initGame();
             }
         }
         
@@ -339,8 +344,13 @@ class Game extends JFrame{
             if (placedCount % 5 == 0) {
                 changeAge();
             }
-            if (units.size() > 0 && units.get(0).getHp() <= 0) units.remove(0);
-            if (enemy.size() > 0 && enemy.get(0).getHp() <= 0) enemy.remove(0);
+            if (units.size() > 0 && units.get(0).getHp() <= 0) {
+              units.remove(0);
+            }
+            if (enemy.size() > 0 && enemy.get(0).getHp() <= 0) {
+              mana += enemy.get(0).getPiercing() * 1.2;
+              enemy.remove(0);
+            }
             repaint();
         }
         

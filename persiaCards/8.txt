@@ -2,7 +2,7 @@ WingedHuzars
 horse.png
 40
 2
-3
-5
+1
+6
 30
 15
