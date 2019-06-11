@@ -1,0 +1,8 @@
+LaserGunner
+laser.png
+300
+20
+1
+1
+400
+300

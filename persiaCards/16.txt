@@ -2,6 +2,7 @@ Drone
 drone.png
 100
 10
+1
 30
 90
 40
