@@ -87,18 +87,15 @@ class Game extends JFrame{
         background = Toolkit.getDefaultToolkit().getImage(imageBack);
         deck = new Deck();
         dark = new Color(0,0,0,0);
-        hand = new ArrayList<>();
-        units = new ArrayList<>();
-        enemy = new ArrayList<>();
+        hand = new ArrayList<DisplayCard>();
+        units = new ArrayList<Entity>();
+        enemy = new ArrayList<Entity>();
         startDate = new Date();
         endDate = new Date();
         clock = new Timer();
         enemy.add(new Entity("Buffboy","tank.png",2,3,1,1,20,1));
         enemy.add(new Entity("Buffboy","tank.png",2,3,1,1,20,1));
         enemy.add(new Entity("Buffboy","tank.png",2,3,1,1,20,1));
-        enemy.get(0).setX(2732);
-        enemy.get(1).setX(2932);
-        enemy.get(2).setX(3332);
         
         setSize(1366,768); 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -210,6 +207,19 @@ class Game extends JFrame{
                 initGame();
             }else if (age==5){
                 imageBack="ageBackground5.jpg";
+            }
+        }
+        
+        public void newEnemy() {
+            int card = (int)(Math.random() * 4);
+            try {
+                Scanner cardLoader = new Scanner(new File(empireName + "Cards/" + (card + ageMultiplier) + ".txt"));
+                enemy.add(cardToEntity(new Unit(cardLoader.next(),cardLoader.next(),
+                cardLoader.nextInt(),cardLoader.nextInt(),cardLoader.nextInt(),
+                cardLoader.nextInt(),cardLoader.nextInt(),cardLoader.nextInt())));
+                enemy.get(enemy.size() - 1).setX(2732);
+            } catch (IOException e) {
+                System.out.println("File not found");
             }
         }
         
@@ -332,6 +342,9 @@ class Game extends JFrame{
             }
             if (e.getKeyChar() == 's') {
                 addHand();
+            }
+            if (e.getKeyChar() == 'y') {
+                newEnemy();
             }
         }
         

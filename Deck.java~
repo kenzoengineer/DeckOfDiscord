@@ -32,7 +32,7 @@ class Deck {
     }
     
     public void shuffle() {
-        ArrayList<Card> temp = new ArrayList<>(deck);
+        ArrayList<Card> temp = deck;
         deck.clear();
         while (temp.size() > 0) {
             Card c = temp.remove((int)(Math.random() * temp.size()));
