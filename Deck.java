@@ -40,6 +40,12 @@ class Deck {
         }
     }
     
+    public void clear() {
+        if (!deck.isEmpty()) {
+            deck.clear();
+        }
+    }
+    
     @Override
     public String toString() {
         String str = "";

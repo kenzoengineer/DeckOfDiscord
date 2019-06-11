@@ -64,10 +64,18 @@ class Entity {
         return attack;
     }
 
-    public void setAttackSpeed(int attack) {
+    public void setAttack(int attack) {
         this.attack = attack;
     }
-
+    
+    public void setRange(int range) {
+        this.range = range;
+    }
+    
+    public int getRange() {
+        return range;
+    }
+    
     public String getDes() {
         return des;
     }
