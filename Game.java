@@ -15,18 +15,19 @@ import java.util.Date;
 class Timer {
     long elapsedTime;
     long lastCheck;
-
+    
     public Timer() {
         lastCheck = System.nanoTime();
         elapsedTime = 0;
     }
-
+    
     public void update() {
+        //
         long currentT = System.nanoTime();
         elapsedTime = currentT - lastCheck;
         lastCheck = currentT;
     }
-
+    
     public double getElapsedTime() {
         return elapsedTime/1.0E9;
     }
@@ -53,11 +54,17 @@ class Game extends JFrame{
     String zoom;
     String imageBack;
     String alertText;
+    String imageBase;
+    String loseImage;
+    String winImage;
     Color dark;
     Image background;
     Image zoomedImage;
     Image special;
     Image overlay;
+    Image baseImage;
+    Image win;
+    Image lose;
     Deck deck;
     ArrayList<DisplayCard> hand;
     ArrayList<Entity> units;
@@ -71,7 +78,10 @@ class Game extends JFrame{
     
     Game(int e) {
         empireNumber = e;
+        imageBase="ageBase1.png";
         imageBack="ageBackground1.jpg";
+        winImage="win.jpg";
+        loseImage="lose.jpg";
         switch (e) {
             case 1:
                 empireName = "persia";
@@ -89,7 +99,7 @@ class Game extends JFrame{
         
         age = 1;
         placedCount = 0;
-        mana = 500;
+        mana = 100;
         ageMultiplier=0;
         cdSum = 0;
         zoom = "";
@@ -101,6 +111,9 @@ class Game extends JFrame{
         background = Toolkit.getDefaultToolkit().getImage(imageBack);
         special = Toolkit.getDefaultToolkit().getImage(empireNumber + "Effect.png");
         overlay = Toolkit.getDefaultToolkit().getImage("overlay.png");
+        baseImage = Toolkit.getDefaultToolkit().getImage(imageBase);
+        win = Toolkit.getDefaultToolkit().getImage(winImage);
+        lose = Toolkit.getDefaultToolkit().getImage(loseImage);
         deck = new Deck();
         dark = new Color(0,0,0,0);
         hand = new ArrayList<DisplayCard>();
@@ -125,7 +138,7 @@ class Game extends JFrame{
         
         JPanel left = new ScrollComponent();
         left.setPreferredSize(new Dimension(183-40,768-500));
-                
+        
         JPanel right = new ScrollComponent();
         right.setPreferredSize(new Dimension(183-40,768-500));
         
@@ -153,8 +166,8 @@ class Game extends JFrame{
                 card += ageMultiplier;
                 cardLoader = new Scanner(new File("persiaCards/" + card + ".txt"));
                 deck.addCard(new Unit(cardLoader.next(),cardLoader.next(),
-                cardLoader.nextInt(),cardLoader.nextInt(),cardLoader.nextInt(),
-                cardLoader.nextInt(),cardLoader.nextInt(),cardLoader.nextInt()));
+                                      cardLoader.nextInt(),cardLoader.nextInt(),cardLoader.nextInt(),
+                                      cardLoader.nextInt(),cardLoader.nextInt(),cardLoader.nextInt()));
             }
             deck.shuffle();
         } catch (FileNotFoundException e) {
@@ -192,18 +205,24 @@ class Game extends JFrame{
             if (placedCount==10){
                 age = 2;
                 background = Toolkit.getDefaultToolkit().getImage(imageBack);
+                baseImage=Toolkit.getDefaultToolkit().getImage(imageBase);
             }else if(placedCount==20){
                 age = 3;
                 background = Toolkit.getDefaultToolkit().getImage(imageBack);
+                baseImage=Toolkit.getDefaultToolkit().getImage(imageBase);
             }else if(placedCount==30){
                 age = 4;
                 background = Toolkit.getDefaultToolkit().getImage(imageBack);
+                baseImage=Toolkit.getDefaultToolkit().getImage(imageBase);
             }else if(placedCount==40){
                 age = 5;
                 background = Toolkit.getDefaultToolkit().getImage(imageBack);
+                baseImage=Toolkit.getDefaultToolkit().getImage(imageBase);
             }
             
             imageBack = "ageBackground" + age + ".jpg";
+            //imageBase= "ageBase1.png";
+            imageBase= "ageBase" + age + ".jpg";
             ageMultiplier = 4 * (age - 1);
             deck.clear();
             initGame();
@@ -214,8 +233,8 @@ class Game extends JFrame{
             try {
                 Scanner cardLoader = new Scanner(new File("persiaCards/" + (card + ageMultiplier) + ".txt"));
                 enemy.add(cardToEntity(new Unit(cardLoader.next(),cardLoader.next(),
-                cardLoader.nextInt(),cardLoader.nextInt(),cardLoader.nextInt(),
-                cardLoader.nextInt(),cardLoader.nextInt(),cardLoader.nextInt())));
+                                                cardLoader.nextInt(),cardLoader.nextInt(),cardLoader.nextInt(),
+                                                cardLoader.nextInt(),cardLoader.nextInt(),cardLoader.nextInt())));
                 enemy.get(enemy.size() - 1).setX(2732);
             } catch (IOException e) {
                 System.out.println("File not found enemy" + ": " + "persiaCards/" + (card + ageMultiplier) + ".txt");
@@ -243,6 +262,18 @@ class Game extends JFrame{
         
         double cdL = 0;
         public void redrawAll(Graphics g) {
+            //drawing base
+            g.drawImage(baseImage, x + 10, 350, null);
+            g.setColor(Color.RED);
+            g.fillRect(x + 10, 350, 145, 15);
+            g.setColor(Color.GREEN);
+            g.fillRect(x + 10, 350, (int)(145 * (playerB.getBaseHealth()/(playerB.getMaxH()*1.0))), 15);
+            g.drawImage(baseImage, x + 2300, 350, null);
+            g.setColor(Color.RED);
+            g.fillRect(x + 2300, 350, 145, 15);
+            g.setColor(Color.GREEN);
+            g.fillRect(x + 2300, 350, (int)(145 * (enemyB.getBaseHealth()/(enemyB.getMaxH()*1.0))), 15);
+            
             for (int i = 0; i < enemy.size(); i++) {
                 Image img = Toolkit.getDefaultToolkit().getImage("persiaCards/" + enemy.get(i).des.substring(0,enemy.get(i).des.indexOf(".")) + "p.png");
                 g.drawImage(img, x + (enemy.get(i).getX()), 400, null);
@@ -357,14 +388,14 @@ class Game extends JFrame{
             timeSum += elapsed;
             if (timeSum > 0.01) {
                 for (int i = 0; i < enemy.size(); i++) {
-                     if (!enemy.get(i).getStop()) {
-                         enemy.get(i).setX(enemy.get(i).getX() - enemy.get(i).getSpeed());
-                     }
-                     if ((i < enemy.size() - 1) && enemy.get(i + 1).getX() - enemy.get(i).getX() < 200) {
+                    if (!enemy.get(i).getStop()) {
+                        enemy.get(i).setX(enemy.get(i).getX() - enemy.get(i).getSpeed());
+                    }
+                    if ((i < enemy.size() - 1) && enemy.get(i + 1).getX() - enemy.get(i).getX() < 200) {
                         enemy.get(i + 1).setX(enemy.get(i).getX() + 200);
-                     }
-                 }
-
+                    }
+                }
+                
                 for (int i = 0; i < units.size(); i++) {
                     if (!units.get(i).getStop()) {
                         units.get(i).setX(units.get(i).getX() + units.get(i).getSpeed());
@@ -391,9 +422,15 @@ class Game extends JFrame{
                         } else if (units.size() > 0 && units.get(0).getStop()) { //unit must be attacking base
                             attack(0,0,"enemyBase");
                             System.out.println(enemyB.getBaseHealth());
+                            if (enemyB.getBaseHealth()<0){
+                              g.drawImage(win, 0, 0, null);
+                            }
                         } else if (enemy.size() > 0 && enemy.get(0).getStop()) { //enemy must be attacking base
                             attack(0,0,"playerBase");
                             System.out.println(playerB.getBaseHealth());
+                            if (playerB.getBaseHealth()<0){
+                              g.drawImage(lose, 0, 0, null);
+                            }
                         }
                         startDate = new Date();
                     }
@@ -430,7 +467,7 @@ class Game extends JFrame{
             for (int i = 0; i < enemy.size(); i++) {
                 if (enemy.get(i).getHp() <= 0) {
                     mana += enemy.get(i).getPiercing() * 1.2;
-                     enemy.remove(i);
+                    enemy.remove(i);
                 }
             }
             repaint();
@@ -546,19 +583,19 @@ class Game extends JFrame{
             double px = e.getX();
             double py = e.getY();
             if (Math.sqrt(Math.pow(50-px,2) + Math.pow(50-py,2)) < 50 && !cooldown) {
-              //ABILITY GOES HERE
-              if (empireNumber==1){
-                playerB.damageBase(-1000);
-              }else if (empireNumber==2){
-                mana += 500;
-              }else if (empireNumber==3){
-                units.get(0).setSpeed(100);
-              }else if (empireNumber==4){
-                enemy.remove(0);
-              }
-              cooldown = true;
-              cdSum = 0;
-              cd.update();
+                //ABILITY GOES HERE
+                if (empireNumber==1){
+                    playerB.damageBase(-1000);
+                }else if (empireNumber==2){
+                    mana += 500;
+                }else if (empireNumber==3){
+                    units.get(0).setSpeed(100);
+                }else if (empireNumber==4){
+                    enemy.remove(0);
+                }
+                cooldown = true;
+                cdSum = 0;
+                cd.update();
             }
         }
         public void mouseMoved (MouseEvent e) {}

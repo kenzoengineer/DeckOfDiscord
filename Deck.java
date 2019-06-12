@@ -31,6 +31,9 @@ class Deck {
         return deck.remove(0);
     }
     
+    /**
+     * shuffles the deck
+     */
     public void shuffle() {
         ArrayList<Card> temp = new ArrayList<>(deck);
         deck.clear();
