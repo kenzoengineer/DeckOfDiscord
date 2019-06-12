@@ -417,12 +417,14 @@ class Game extends JFrame{
                             System.out.println(enemyB.getBaseHealth());
                             if (enemyB.getBaseHealth()<0){
                               end.endGame(0);
+                              dispose();
                             }
                         } else if (enemy.size() > 0 && enemy.get(0).getStop()) { //enemy must be attacking base
                             attack(0,0,"playerBase");
                             System.out.println(playerB.getBaseHealth());
                             if (playerB.getBaseHealth()<0){
                               end.endGame(1);
+                              dispose();
                             }
                         }
                         startDate = new Date();
