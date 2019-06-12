@@ -6,6 +6,7 @@
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
+import static java.awt.event.KeyEvent.VK_ESCAPE;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -437,7 +438,7 @@ class Game extends JFrame{
         
         boolean done = false;
         public void keyTyped(KeyEvent e) {
-            if (e.getKeyChar() == 'p') {
+            if (e.getKeyChar() == VK_ESCAPE) {
                 System.exit(0);
             }
             if (e.getKeyChar() == 'a') {
