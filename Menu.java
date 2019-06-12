@@ -14,7 +14,9 @@ class Menu extends JFrame{
     try {
       InputStream in = new FileInputStream(soundFile);
       audioStream = new AudioStream(in);
-    } catch (IOException e) {}
+    } catch (IOException e) {
+        System.out.println("Can't play");
+    }
     
     popup = Toolkit.getDefaultToolkit().getImage("transparent.png");
     AudioPlayer.player.start(audioStream);
@@ -50,14 +52,18 @@ class Menu extends JFrame{
       if (px<1500 && px>950 && py<280 && py>200){
         System.out.print("start"+"\n");
         AudioPlayer.player.stop(audioStream);
-        Empire game = new Empire();
+        Empire empire = new Empire();
         setVisible(false);
         dispose();
       }else if(px<1500 && px>950 && py<380 && py>300){
         System.out.print("options"+"\n");
         popup = Toolkit.getDefaultToolkit().getImage("Instructions.png");
       }else if(px<1500 && px>950 && py<480 && py>400){
-        System.out.print("credits"+"\n");
+        System.out.print("deckbuild"+"\n");
+        AudioPlayer.player.stop(audioStream);
+        DeckBuilder db = new DeckBuilder();
+        setVisible(false);
+        dispose();
       }else if(px<1500 && px>950 && py<580 && py>500){
         System.out.print("exit"+"\n");
         System.exit(0);
