@@ -107,7 +107,7 @@ public class DeckBuilder extends JFrame {
             }
             if (displayS.length() > 0) {
                 if (e.getKeyChar() == KeyEvent.VK_BACK_SPACE) {
-                    displayS.substring(0,displayS.length() - 2);
+                    displayS = displayS.substring(0,displayS.length() - 2);
                 }
             }
         }
