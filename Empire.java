@@ -27,11 +27,13 @@ class Empire extends JFrame{
     int empires;
     Image empireSelect;
     AudioStream audioStream;
-    String soundFile = "menu.au";
+    String soundFile;
+    
     Empire() {
         px = 0;
         py = 0;
         empires = 0;
+        soundFile = "menu.au";
         empireSelect = Toolkit.getDefaultToolkit().getImage("select.jpg");
         setSize(1366,768);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -49,6 +51,7 @@ class Empire extends JFrame{
     }
   
     public void select(){
+        //checks which empire the player selected
         if (empires == 1){
             empireSelect = Toolkit.getDefaultToolkit().getImage("persia.jpg");
             AudioPlayer.player.stop(audioStream);
@@ -96,53 +99,55 @@ class Empire extends JFrame{
         }
     }
   
-  class GamePanel extends JPanel implements MouseListener{
-    GamePanel() {
-      this.addMouseListener(this);
-      setFocusable(true);
-      requestFocusInWindow();
-      setUndecorated(false);
+    class GamePanel extends JPanel implements MouseListener{
+        GamePanel() {
+          //add listeners
+          this.addMouseListener(this);
+          setFocusable(true);
+          requestFocusInWindow();
+          setUndecorated(false);
+        }
+
+        public void mouseClicked(MouseEvent e) {
+            //get pointer coordinates
+            px= e.getX();
+            py= e.getY();
+            
+            //checks where the mouse clicked
+            if (px < 1300 && px > 1000 && py < 240 && py > 150) {
+                empires = 1;
+                select();
+            } else if (px < 1300 && px > 950 && py < 380 && py > 300) {
+                empires = 2;
+                select();
+            } else if (px < 1300 && px > 950 && py < 480 && py > 400) {
+                empires = 3;
+                select();
+            } else if (px < 1300 && px > 950 && py < 640 && py > 560) {
+                empires = 4;
+                select();
+            } else if (px < 350 && px > 50 && py < 700 && py > 600) {
+                empireSelect = Toolkit.getDefaultToolkit().getImage("select.jpg");
+            } else if (px < 328 && px > 76 && py < 534 && py > 458){
+                dispose();
+                Game game = new Game(empireCheck());
+            }
+        }
+
+        /**
+         * redraws the screen
+         * @param g graphics object
+         */
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            g.drawImage(empireSelect,0,0,1366,768,this);
+            repaint();
+        }
+
+        public void mouseExited(MouseEvent e) {}
+        public void mouseEntered(MouseEvent e) {}
+        public void mouseReleased(MouseEvent e) {}
+        public void mousePressed(MouseEvent e) {}
+
     }
-    
-    public void mouseClicked(MouseEvent e) {
-      px= e.getX();
-      py= e.getY();
-      System.out.println(px + " "+ py);
-      if (px<1300 && px>1000 && py<240 && py>150){
-        System.out.print("persia"+"\n");
-        empires=1;
-        select();
-      }else if(px<1300 && px>950 && py<380 && py>300){
-        System.out.print("china"+"\n");
-        empires=2;
-        select();
-      }else if(px<1300 && px>950 && py<480 && py>400){
-        System.out.print("mexico"+"\n");
-        empires=3;
-        select();
-      }else if(px<1300 && px>950 && py<640 && py>560){
-        System.out.print("mars"+"\n");
-        empires=4;
-        select();
-      }else if(px<350 && px>50 && py<700 && py>600){
-        System.out.print("back"+"\n");
-        empireSelect = Toolkit.getDefaultToolkit().getImage("select.jpg");
-      }else if (px < 328 && px > 76 && py < 534 && py > 458){
-        dispose();
-        Game game = new Game(empireCheck());
-      }
-    }
-    
-    public void paintComponent(Graphics g) {
-      super.paintComponent(g);
-      g.drawImage(empireSelect,0,0,1366,768,this);
-      repaint();
-    }
-    
-    public void mouseExited(MouseEvent e) {}
-    public void mouseEntered(MouseEvent e) {}
-    public void mouseReleased(MouseEvent e) {}
-    public void mousePressed(MouseEvent e) {}
-    
-  }
 }
