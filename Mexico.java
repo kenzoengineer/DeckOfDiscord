@@ -1,2 +1,0 @@
-class Mexico extends Empire {  
-}

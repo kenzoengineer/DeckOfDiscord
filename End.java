@@ -18,7 +18,7 @@ import sun.audio.AudioStream;
  * play different songs during the game
  * @since June 12th, 2019
  * @author Souren A., Ken J.
- * @version 2.95
+ * @version 2.96
  */
 
 class End extends JFrame{
@@ -29,6 +29,7 @@ class End extends JFrame{
     
     End(boolean won) {
         this.won = won;
+        //run this if won
         if (won){
             ending = Toolkit.getDefaultToolkit().getImage("win.png");
             try {
@@ -37,7 +38,7 @@ class End extends JFrame{
             } catch (IOException e) {
                 System.out.println("Can't Play");
             }
-        } else {
+        } else { //run this if lost
             ending = Toolkit.getDefaultToolkit().getImage("lose.png");
             try {
                 InputStream in = new FileInputStream("lose.au");
@@ -47,6 +48,7 @@ class End extends JFrame{
             }
         }
         
+        //setting up jframe
         AudioPlayer.player.start(audioStream);
         setSize(1366,768);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -59,19 +61,21 @@ class End extends JFrame{
 
     class GamePanel extends JPanel implements MouseListener{
         GamePanel() {
-          //add listeners
-          this.addMouseListener(this);
-          setFocusable(true);
-          requestFocusInWindow();
-          setUndecorated(false);
+            //add listeners
+            this.addMouseListener(this);
+            setFocusable(true);
+            requestFocusInWindow();
+            setUndecorated(false);
         }
 
         public void mouseClicked(MouseEvent e) {
+            //get cursor position
             int px = e.getX();
             int py = e.getY();
+            //check if exit button is clicked
             if (px < 1352 && px > 1216 && py < 584 && py > 513) {
                 System.exit(0);
-            } else if (px < 1349 && px > 926 && py < 707 && py > 619) {
+            } else if (px < 1349 && px > 926 && py < 707 && py > 619) { //check if play again is clicked
                 AudioPlayer.player.stop(audioStream);
                 Menu menu = new Menu();
                 setVisible(false);
