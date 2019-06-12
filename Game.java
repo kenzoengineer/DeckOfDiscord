@@ -58,6 +58,7 @@ class Game extends JFrame{
     Image special;
     Image overlay;
     Deck deck;
+    Base base;
     ArrayList<DisplayCard> hand;
     ArrayList<Entity> units;
     ArrayList<Entity> enemy;
@@ -545,10 +546,19 @@ class Game extends JFrame{
             double px = e.getX();
             double py = e.getY();
             if (Math.sqrt(Math.pow(50-px,2) + Math.pow(50-py,2)) < 50 && !cooldown) {
-                //ABILITY GOES HERE
-                cooldown = true;
-                cdSum = 0;
-                cd.update();
+              //ABILITY GOES HERE
+              if (empireNumber==1){
+                base.damageBase(-1000);
+              }else if (empireNumber==2){
+                mana+=500;
+              }else if (empireNumber==3){
+                units.get(0).setSpeed(100);
+              }else if (empireNumber==4){
+                units.remove(0);
+              }
+              cooldown = true;
+              cdSum = 0;
+              cd.update();
             }
         }
         public void mouseMoved (MouseEvent e) {}
