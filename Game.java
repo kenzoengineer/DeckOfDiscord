@@ -58,7 +58,6 @@ class Game extends JFrame{
     Image special;
     Image overlay;
     Deck deck;
-    Base base;
     ArrayList<DisplayCard> hand;
     ArrayList<Entity> units;
     ArrayList<Entity> enemy;
@@ -548,9 +547,9 @@ class Game extends JFrame{
             if (Math.sqrt(Math.pow(50-px,2) + Math.pow(50-py,2)) < 50 && !cooldown) {
               //ABILITY GOES HERE
               if (empireNumber==1){
-                base.damageBase(-1000);
+                playerB.damageBase(-1000);
               }else if (empireNumber==2){
-                mana+=500;
+                mana += 500;
               }else if (empireNumber==3){
                 units.get(0).setSpeed(100);
               }else if (empireNumber==4){
