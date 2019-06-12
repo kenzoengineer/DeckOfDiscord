@@ -554,7 +554,7 @@ class Game extends JFrame{
               }else if (empireNumber==3){
                 units.get(0).setSpeed(100);
               }else if (empireNumber==4){
-                units.remove(0);
+                enemy.remove(0);
               }
               cooldown = true;
               cdSum = 0;
