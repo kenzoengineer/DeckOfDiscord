@@ -254,9 +254,18 @@ class Game extends JFrame{
         
         double cdL = 0;
         public void redrawAll(Graphics g) {
-            //System.out.print(imageBase);
-            g.drawImage(baseImage, x + 10, 400, null);
-            g.drawImage(baseImage, x + 2300, 400, null);
+            //drawing base
+            g.drawImage(baseImage, x + 10, 350, null);
+            g.setColor(Color.RED);
+            g.fillRect(x + 10, 350, 145, 15);
+            g.setColor(Color.GREEN);
+            g.fillRect(x + 10, 350, (int)(145 * (playerB.getBaseHealth()/(playerB.getMaxH()*1.0))), 15);
+            g.drawImage(baseImage, x + 2300, 350, null);
+            g.setColor(Color.RED);
+            g.fillRect(x + 2300, 350, 145, 15);
+            g.setColor(Color.GREEN);
+            g.fillRect(x + 2300, 350, (int)(145 * (enemyB.getBaseHealth()/(enemyB.getMaxH()*1.0))), 15);
+            
             for (int i = 0; i < enemy.size(); i++) {
                 Image img = Toolkit.getDefaultToolkit().getImage("persiaCards/" + enemy.get(i).des.substring(0,enemy.get(i).des.indexOf(".")) + "p.png");
                 g.drawImage(img, x + (enemy.get(i).getX()), 400, null);

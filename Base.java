@@ -1,6 +1,6 @@
 class Base{
-    int health;
-    int maxH;
+    private int health;
+    private int maxH;
     
     public Base() {
         health = 200;
@@ -18,5 +18,9 @@ class Base{
     
     public void damageBase(int damage){
         health -= damage;
+    }
+    
+    public int getMaxH() {
+        return maxH;
     }
 }
