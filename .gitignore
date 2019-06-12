@@ -1,3 +1,8 @@
 
 Game.java
 *.class
+cards.txt
+Timer.class
+Game.class
+Game$ScrollComponent.class
+Game$GamePanel.class
