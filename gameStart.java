@@ -3,5 +3,6 @@ class gameStart {
     Menu game = new Menu();
     //Game game = new Game(2);
     //Entity game = new Entity();
+    //End end = new End(false);
   }
 }

@@ -1,16 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- *
- * @author kenj8
- */
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
-import static java.awt.event.KeyEvent.VK_BACK_SPACE;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -20,9 +14,21 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
+
+/**
+ * Allows to user to create their own deck of cards, meaning endless
+ * combinations and play styles. Read and writes to a text file 
+ * @see cards.txt
+ * @author Souren A., Ken J.
+ * @since June 11th, 2019
+ * @version 2.80
+ */
+
+
 public class DeckBuilder extends JFrame {
     FileWriter fw;
     PrintWriter pw;
@@ -51,10 +57,18 @@ public class DeckBuilder extends JFrame {
         setVisible(true);
     }
     
-    public void write(int s) {
-        pw.println(s);
+    /**
+     * Writes an integer to cards.txt
+     * @param i is the integer being written to the file
+     */
+    public void write(int i) {
+        pw.println(i);
     }
     
+    /**
+     * Closes the File Writer and Print Writer
+     * which saves the changes
+     */
     public void close() {
         try {
             fw.close();
@@ -73,6 +87,9 @@ public class DeckBuilder extends JFrame {
             setUndecorated(false);
         }
         
+        /**
+         * Opens the menu window after this window is closed
+         */
         public void openMenu() {
             AudioPlayer.player.stop(as);
             Menu menu = new Menu();
@@ -80,6 +97,10 @@ public class DeckBuilder extends JFrame {
             dispose();
         }
         
+        /**
+         * Redraws the screen
+         * @param g graphic object
+         */
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
             g.drawImage(bg,0,0,null);
@@ -93,6 +114,10 @@ public class DeckBuilder extends JFrame {
             repaint();
         }
         
+        /**
+         * Called when a key is pressed
+         * @param e Key Event object
+         */
         public void keyPressed(KeyEvent e) {
             if (displayS.length() < 40) {
                 if (e.getKeyChar() == '1') {
@@ -111,12 +136,11 @@ public class DeckBuilder extends JFrame {
                 }
             }
         }
-        public void keyReleased(KeyEvent e) {}
-        public void keyTyped(KeyEvent e) {}
-        public void mouseExited(MouseEvent e) {}
-        public void mouseEntered(MouseEvent e) {}
-        public void mouseReleased(MouseEvent e) {}
-        public void mousePressed(MouseEvent e) {}
+        
+        /**
+         * Called when the left click button is clicked
+         * @param e Mouse Event object
+         */
         public void mouseClicked(MouseEvent e) {
             //Point p = e.getPoint();
             //System.out.println(p.toString());
@@ -140,5 +164,13 @@ public class DeckBuilder extends JFrame {
                 }
             }
         }
+        
+        //unused event listeners
+        public void keyReleased(KeyEvent e) {}
+        public void keyTyped(KeyEvent e) {}
+        public void mouseExited(MouseEvent e) {}
+        public void mouseEntered(MouseEvent e) {}
+        public void mouseReleased(MouseEvent e) {}
+        public void mousePressed(MouseEvent e) {}
     }
 }

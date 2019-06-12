@@ -14,45 +14,49 @@ import sun.audio.AudioStream;
 
 /**
  * The empire selection screen, which allows the user to pick from 4 different
- * empires: Perisa, China, Mexico and Mars. Each have different abilities and
+ * empires: Persia, China, Mexico and Mars. Each have different abilities and
  * play different songs during the game
- * @since May 25th, 2019
+ * @since June 12th, 2019
  * @author Souren A., Ken J.
- * @version 2.50
+ * @version 2.95
  */
 
 class End extends JFrame{
     Image ending;
-    String endImage;
     AudioStream audioStream;
     String soundFile;
+    boolean won;
     
-    End() {
-        //soundFile = "menu.au";
-        ending = Toolkit.getDefaultToolkit().getImage(endImage);
+    End(boolean won) {
+        this.won = won;
+        if (won){
+            ending = Toolkit.getDefaultToolkit().getImage("win.png");
+            try {
+                InputStream in = new FileInputStream("win.au");
+                audioStream = new AudioStream(in);
+            } catch (IOException e) {
+                System.out.println("Can't Play");
+            }
+        } else {
+            ending = Toolkit.getDefaultToolkit().getImage("lose.png");
+            try {
+                InputStream in = new FileInputStream("lose.au");
+                audioStream = new AudioStream(in);
+            } catch (IOException e) {
+                System.out.println("Can't Play");
+            }
+        }
+        
+        AudioPlayer.player.start(audioStream);
         setSize(1366,768);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         setResizable(false);
         GamePanel gp = new GamePanel();
-        JPanel myPanel = new JPanel();
-        add(myPanel);
         add(gp);
         setVisible(true);
     }
-  
-  
-    public void endGame(int winLose){
-      if (winLose==0){
-        endImage="win.jpg";
-        ending = Toolkit.getDefaultToolkit().getImage(endImage);
-      }else if (winLose==1){
-         endImage="lose.jpg";
-        ending = Toolkit.getDefaultToolkit().getImage(endImage);
-      }
-       
-    }
-  
+
     class GamePanel extends JPanel implements MouseListener{
         GamePanel() {
           //add listeners
@@ -63,7 +67,16 @@ class End extends JFrame{
         }
 
         public void mouseClicked(MouseEvent e) {
-            
+            int px = e.getX();
+            int py = e.getY();
+            if (px < 1352 && px > 1216 && py < 584 && py > 513) {
+                System.exit(0);
+            } else if (px < 1349 && px > 926 && py < 707 && py > 619) {
+                AudioPlayer.player.stop(audioStream);
+                Menu menu = new Menu();
+                setVisible(false);
+                dispose();
+            }
         }
 
         /**
@@ -72,7 +85,7 @@ class End extends JFrame{
          */
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
-            g.drawImage(ending,0,0,1366,768,this);
+            g.drawImage(ending,0,0,1366,768,null);
             repaint();
         }
 

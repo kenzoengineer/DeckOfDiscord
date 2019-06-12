@@ -11,6 +11,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Date;
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
 
 class Timer {
     long elapsedTime;
@@ -55,6 +57,7 @@ class Game extends JFrame{
     String imageBack;
     String alertText;
     String imageBase;
+    String soundFile;
     Color dark;
     Image background;
     Image zoomedImage;
@@ -72,26 +75,38 @@ class Game extends JFrame{
     Base playerB;
     Base enemyB;
     End end;
+    AudioStream as;
     
     Game(int e) {
         empireNumber = e;
         imageBase="ageBase1.png";
         imageBack="ageBackground1.jpg";
+        soundFile = "";
         switch (e) {
             case 1:
                 empireName = "persia";
+                soundFile = "persia.au";
                 break;
             case 2:
                 empireName = "china";
+                soundFile = "china.au";
                 break;
             case 3:
                 empireName = "mexico";
+                soundFile = "mexico.au";
                 break;
             default:
                 empireName = "mars";
+                soundFile = "mars.au";
                 break;
         }
-        
+        try {
+          InputStream in = new FileInputStream(soundFile);
+          as = new AudioStream(in);
+        } catch (IOException ex) {
+            System.out.println("Can't play");
+        }
+        AudioPlayer.player.start(as);
         age = 1;
         placedCount = 0;
         mana = 100;
@@ -250,6 +265,18 @@ class Game extends JFrame{
                 if (units.size() > 1 && units.get(1).getRange() == 2) {
                     enemyB.damageBase(units.get(1).getAttack());
                 }
+            }
+            if (enemyB.getBaseHealth()<0){
+                AudioPlayer.player.stop(as);
+                End end = new End(true);
+                setVisible(false);
+                dispose();
+            }
+            if (playerB.getBaseHealth()<0){
+                AudioPlayer.player.stop(as);
+                End end = new End(false);
+                setVisible(false);
+                dispose();
             }
         }
         
@@ -415,17 +442,10 @@ class Game extends JFrame{
                         } else if (units.size() > 0 && units.get(0).getStop()) { //unit must be attacking base
                             attack(0,0,"enemyBase");
                             System.out.println(enemyB.getBaseHealth());
-                            if (enemyB.getBaseHealth()<0){
-                              end.endGame(0);
-                              dispose();
-                            }
+                            
                         } else if (enemy.size() > 0 && enemy.get(0).getStop()) { //enemy must be attacking base
                             attack(0,0,"playerBase");
                             System.out.println(playerB.getBaseHealth());
-                            if (playerB.getBaseHealth()<0){
-                              end.endGame(1);
-                              dispose();
-                            }
                         }
                         startDate = new Date();
                     }
@@ -473,15 +493,20 @@ class Game extends JFrame{
             if (e.getKeyChar() == VK_ESCAPE) {
                 System.exit(0);
             }
-            if (e.getKeyChar() == 'a') {
-                initGame();
+            if (e.getKeyChar() == 'u') {
+                units.remove(0);
             }
-            if (e.getKeyChar() == 's') {
+            if (e.getKeyChar() == 'i') {
                 System.out.println(units.get(0).getX());
             }
-            if (e.getKeyChar() == 'y') {
-                //newEnemy();
+            if (e.getKeyChar() == 'o') {
                 units.get(1).setHp(units.get(1).getHp() - 2);
+            }
+            if (e.getKeyChar() == 'p') {
+                attack(0,0,"enemyBase");
+            }
+            if (e.getKeyChar() == '[') {
+                attack(0,0,"playerBase");
             }
         }
         
@@ -512,9 +537,6 @@ class Game extends JFrame{
                     zoomedImage = Toolkit.getDefaultToolkit().getImage("persiaCards/" + zoom.substring(0,zoom.indexOf(".")) + "x.png");
                     done = true;
                 }
-            }
-            if (e.getKeyChar() == 'l') {
-                units.remove(0);
             }
             if (e.getKeyChar() == 'h') {
                 hideCards = true;
@@ -578,7 +600,7 @@ class Game extends JFrame{
             double px = e.getX();
             double py = e.getY();
             if (Math.sqrt(Math.pow(50-px,2) + Math.pow(50-py,2)) < 50 && !cooldown) {
-                //ABILITY GOES HERE
+                //abilities
                 if (empireNumber==1){
                     playerB.damageBase(-1000);
                 }else if (empireNumber==2){

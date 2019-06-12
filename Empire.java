@@ -129,6 +129,7 @@ class Empire extends JFrame{
             } else if (px < 350 && px > 50 && py < 700 && py > 600) {
                 empireSelect = Toolkit.getDefaultToolkit().getImage("select.jpg");
             } else if (px < 328 && px > 76 && py < 534 && py > 458){
+                AudioPlayer.player.stop(audioStream);
                 dispose();
                 Game game = new Game(empireCheck());
             }

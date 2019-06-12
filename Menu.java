@@ -66,7 +66,7 @@ class Menu extends JFrame{
         }
 
         /**
-         * called when the mouse is clicked
+         * Called when the mouse is clicked
          * @param e the mouse event
          */
         public void mouseClicked(MouseEvent e) {
@@ -95,7 +95,7 @@ class Menu extends JFrame{
         }
         
         /**
-        * redraws the screen
+        * Redraws the screen
         * @param g graphics
         */
         @Override
