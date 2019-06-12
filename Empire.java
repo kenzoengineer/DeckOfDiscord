@@ -1,8 +1,23 @@
-import java.awt.*;
-import javax.swing.*;
-import java.awt.event.*;
-import java.io.*;
-import sun.audio.*;
+import java.awt.BorderLayout;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
+
+/**
+ * @since May 25th, 2019
+ * @author Souren A., Ken J.
+ * @version 2.50
+ */
+
 class Empire extends JFrame{
   double px=0;
   double py=0;
