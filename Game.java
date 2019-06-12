@@ -74,7 +74,7 @@ class Game extends JFrame{
     
     Game(int e) {
         empireNumber = e;
-        imageBase="ageBase1.jpg";
+        imageBase="ageBase1.png";
         imageBack="ageBackground1.jpg";
         switch (e) {
             case 1:
@@ -213,8 +213,8 @@ class Game extends JFrame{
             }
             
             imageBack = "ageBackground" + age + ".jpg";
-            imageBase= "ageBase1.jpg";
-            //imageBase= "ageBase" + age + ".jpg";
+            //imageBase= "ageBase1.png";
+            imageBase= "ageBase" + age + ".jpg";
             ageMultiplier = 4 * (age - 1);
             deck.clear();
             initGame();

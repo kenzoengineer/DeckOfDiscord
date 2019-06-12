@@ -1,12 +1,15 @@
 class Base{
     int health;
+    int maxH;
     
     public Base() {
         health = 200;
+        maxH = this.health;
     }
     
     public void setBaseAge(int age) {
-        health *= age;
+        health *= (age * 2);
+        maxH *= (age * 2);
     }
     
     public int getBaseHealth(){
