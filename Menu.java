@@ -6,6 +6,7 @@ import sun.audio.*;
 class Menu extends JFrame{
   double px=0;
   double py=0;
+  Image popup;
   GamePanel gp;
   AudioStream audioStream;
   Menu() {
@@ -15,6 +16,7 @@ class Menu extends JFrame{
       audioStream = new AudioStream(in);
     } catch (IOException e) {}
     
+    popup = Toolkit.getDefaultToolkit().getImage("transparent.png");
     AudioPlayer.player.start(audioStream);
     setSize(1366,768); 
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -44,7 +46,7 @@ class Menu extends JFrame{
     public void mouseClicked(MouseEvent e) {
       px= e.getX();
       py= e.getY();
-      //System.out.println(px + " "+ py);
+      System.out.println(px + " "+ py);
       if (px<1500 && px>950 && py<280 && py>200){
         System.out.print("start"+"\n");
         AudioPlayer.player.stop(audioStream);
@@ -53,17 +55,21 @@ class Menu extends JFrame{
         dispose();
       }else if(px<1500 && px>950 && py<380 && py>300){
         System.out.print("options"+"\n");
+        popup = Toolkit.getDefaultToolkit().getImage("Instructions.png");
       }else if(px<1500 && px>950 && py<480 && py>400){
         System.out.print("credits"+"\n");
       }else if(px<1500 && px>950 && py<580 && py>500){
         System.out.print("exit"+"\n");
         System.exit(0);
+      } else if (px > 1175 && py > 674) {
+          popup = Toolkit.getDefaultToolkit().getImage("transparent.png");
       }
     }
     public void paintComponent(Graphics g) {
       super.paintComponent(g);
       Image menu = Toolkit.getDefaultToolkit().getImage("menuImage.png");
       g.drawImage(menu,0,0,1366,768,this);
+      g.drawImage(popup, 0, -30, 1366, 768, null);
       repaint();
     }
   }
