@@ -17,7 +17,7 @@ import sun.audio.AudioStream;
  * game, how to play, building the deck and exit. It also plays the menu music
  * @author Souren A., Ken J.
  * @since May 24th, 2019
- * @version 2.0
+ * @version 2.82
  */
 
 class Menu extends JFrame{

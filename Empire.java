@@ -13,90 +13,88 @@ import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
 
 /**
+ * The empire selection screen, which allows the user to pick from 4 different
+ * empires: Perisa, China, Mexico and Mars. Each have different abilities and
+ * play different songs during the game
  * @since May 25th, 2019
  * @author Souren A., Ken J.
  * @version 2.50
  */
 
 class Empire extends JFrame{
-  double px=0;
-  double py=0;
-  int empires = 0;
-  Image empireSelect;
-  AudioStream audioStream;
-  String soundFile = "menu.au";
-  Empire() {
-    empireSelect = Toolkit.getDefaultToolkit().getImage("select.jpg");
-    setSize(1366,768);
-    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    setLayout(new BorderLayout());
-    setResizable(false);
-    GamePanel gp = new GamePanel();
-    JPanel myPanel = new JPanel();
-    add(myPanel);
-    add(gp);
-    setVisible(true);
-  }
-  
-  public int empireCheck(){
-    return empires;
-  }
-  
-  public void abilty(){
-    if (empires == 1){
-      //Persia nation = new Persia();
-      //nation.effect();
-    }else if (empires == 2){
-      //China nation = new China();
-      //nation.effect();
-    }else if (empires == 3){
-      //Mexico nation = new Mexico();
-      //nation.effect();
-    }else if (empires == 4){
-      //Mars nation = new Mars();
-      //nation.effect();
+    double px;
+    double py;
+    int empires;
+    Image empireSelect;
+    AudioStream audioStream;
+    String soundFile = "menu.au";
+    Empire() {
+        px = 0;
+        py = 0;
+        empires = 0;
+        empireSelect = Toolkit.getDefaultToolkit().getImage("select.jpg");
+        setSize(1366,768);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+        setResizable(false);
+        GamePanel gp = new GamePanel();
+        JPanel myPanel = new JPanel();
+        add(myPanel);
+        add(gp);
+        setVisible(true);
     }
-  }
   
-  public void select(){
-    if (empires == 1){
-      empireSelect = Toolkit.getDefaultToolkit().getImage("persia.jpg");
-      AudioPlayer.player.stop(audioStream);
-      soundFile = "persia.au";
-      try {
-        InputStream in = new FileInputStream(soundFile);
-        audioStream = new AudioStream(in);
-      } catch (IOException e) {}
-      AudioPlayer.player.start(audioStream);
-    }else if (empires == 2){
-      empireSelect = Toolkit.getDefaultToolkit().getImage("China.jpg");
-      AudioPlayer.player.stop(audioStream);
-      soundFile = "china.au";
-      try {
-        InputStream in = new FileInputStream(soundFile);
-        audioStream = new AudioStream(in);
-      } catch (IOException e) {}
-      AudioPlayer.player.start(audioStream);
-    }else if (empires == 3){
-      empireSelect = Toolkit.getDefaultToolkit().getImage("mexico.jpg");
-      AudioPlayer.player.stop(audioStream);
-      soundFile = "mexico.au";
-      try {
-        InputStream in = new FileInputStream(soundFile);
-        audioStream = new AudioStream(in);
-      } catch (IOException e) {}
-      AudioPlayer.player.start(audioStream);
-    }else if (empires == 4){
-      empireSelect = Toolkit.getDefaultToolkit().getImage("mars.jpg");
-      AudioPlayer.player.stop(audioStream);
-      soundFile = "mars.au";
-      try {
-        InputStream in = new FileInputStream(soundFile);
-        audioStream = new AudioStream(in);
-      } catch (IOException e) {}
-      AudioPlayer.player.start(audioStream);
+    public int empireCheck(){
+        return empires;
     }
-  }
+  
+    public void select(){
+        if (empires == 1){
+            empireSelect = Toolkit.getDefaultToolkit().getImage("persia.jpg");
+            AudioPlayer.player.stop(audioStream);
+            soundFile = "persia.au";
+            try {
+                InputStream in = new FileInputStream(soundFile);
+                audioStream = new AudioStream(in);
+            } catch (IOException e) {
+                System.out.println("Cannot play");
+            }
+            AudioPlayer.player.start(audioStream);
+        }else if (empires == 2){
+            empireSelect = Toolkit.getDefaultToolkit().getImage("China.jpg");
+            AudioPlayer.player.stop(audioStream);
+            soundFile = "china.au";
+            try {
+                InputStream in = new FileInputStream(soundFile);
+                audioStream = new AudioStream(in);
+            } catch (IOException e) {
+                System.out.println("Cannot play");
+            }
+            AudioPlayer.player.start(audioStream);
+        }else if (empires == 3){
+            empireSelect = Toolkit.getDefaultToolkit().getImage("mexico.jpg");
+            AudioPlayer.player.stop(audioStream);
+            soundFile = "mexico.au";
+            try {
+                InputStream in = new FileInputStream(soundFile);
+                audioStream = new AudioStream(in);
+            } catch (IOException e) {
+                System.out.println("Cannot play");
+            }
+            AudioPlayer.player.start(audioStream);
+        }else if (empires == 4){
+            empireSelect = Toolkit.getDefaultToolkit().getImage("mars.jpg");
+            AudioPlayer.player.stop(audioStream);
+            soundFile = "mars.au";
+            try {
+                InputStream in = new FileInputStream(soundFile);
+                audioStream = new AudioStream(in);
+            } catch (IOException e) {
+                System.out.println("Cannot play");
+            }
+            AudioPlayer.player.start(audioStream);
+        }
+    }
   
   class GamePanel extends JPanel implements MouseListener{
     GamePanel() {
