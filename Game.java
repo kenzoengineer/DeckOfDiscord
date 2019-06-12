@@ -55,16 +55,12 @@ class Game extends JFrame{
     String imageBack;
     String alertText;
     String imageBase;
-    String loseImage;
-    String winImage;
     Color dark;
     Image background;
     Image zoomedImage;
     Image special;
     Image overlay;
     Image baseImage;
-    Image win;
-    Image lose;
     Deck deck;
     ArrayList<DisplayCard> hand;
     ArrayList<Entity> units;
@@ -75,13 +71,12 @@ class Game extends JFrame{
     Timer cd;
     Base playerB;
     Base enemyB;
+    End end;
     
     Game(int e) {
         empireNumber = e;
         imageBase="ageBase1.png";
         imageBack="ageBackground1.jpg";
-        winImage="win.jpg";
-        loseImage="lose.jpg";
         switch (e) {
             case 1:
                 empireName = "persia";
@@ -112,8 +107,6 @@ class Game extends JFrame{
         special = Toolkit.getDefaultToolkit().getImage(empireNumber + "Effect.png");
         overlay = Toolkit.getDefaultToolkit().getImage("overlay.png");
         baseImage = Toolkit.getDefaultToolkit().getImage(imageBase);
-        win = Toolkit.getDefaultToolkit().getImage(winImage);
-        lose = Toolkit.getDefaultToolkit().getImage(loseImage);
         deck = new Deck();
         dark = new Color(0,0,0,0);
         hand = new ArrayList<DisplayCard>();
@@ -423,13 +416,13 @@ class Game extends JFrame{
                             attack(0,0,"enemyBase");
                             System.out.println(enemyB.getBaseHealth());
                             if (enemyB.getBaseHealth()<0){
-                              g.drawImage(win, 0, 0, null);
+                              end.endGame(0);
                             }
                         } else if (enemy.size() > 0 && enemy.get(0).getStop()) { //enemy must be attacking base
                             attack(0,0,"playerBase");
                             System.out.println(playerB.getBaseHealth());
                             if (playerB.getBaseHealth()<0){
-                              g.drawImage(lose, 0, 0, null);
+                              end.endGame(1);
                             }
                         }
                         startDate = new Date();
