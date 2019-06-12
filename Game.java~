@@ -6,6 +6,7 @@
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
+import static java.awt.event.KeyEvent.VK_ESCAPE;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -437,7 +438,7 @@ class Game extends JFrame{
         
         boolean done = false;
         public void keyTyped(KeyEvent e) {
-            if (e.getKeyChar() == 'p') {
+            if (e.getKeyChar() == VK_ESCAPE) {
                 System.exit(0);
             }
             if (e.getKeyChar() == 'a') {
@@ -545,10 +546,19 @@ class Game extends JFrame{
             double px = e.getX();
             double py = e.getY();
             if (Math.sqrt(Math.pow(50-px,2) + Math.pow(50-py,2)) < 50 && !cooldown) {
-                //ABILITY GOES HERE
-                cooldown = true;
-                cdSum = 0;
-                cd.update();
+              //ABILITY GOES HERE
+              if (empireNumber==1){
+                playerB.damageBase(-1000);
+              }else if (empireNumber==2){
+                mana += 500;
+              }else if (empireNumber==3){
+                units.get(0).setSpeed(100);
+              }else if (empireNumber==4){
+                enemy.remove(0);
+              }
+              cooldown = true;
+              cdSum = 0;
+              cd.update();
             }
         }
         public void mouseMoved (MouseEvent e) {}
