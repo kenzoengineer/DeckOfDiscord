@@ -1,19 +1,44 @@
-//s draw card
-//z zoom in
-//l pop first unit
-//p end game
-
-import java.awt.*;
-import javax.swing.*;
-import java.awt.event.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
 import static java.awt.event.KeyEvent.VK_ESCAPE;
-import java.io.*;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.Date;
+import java.util.Scanner;
+import javax.swing.BoxLayout;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
 
+/**
+ * The main program, holds everything that the game depends on and draws
+ * it to the screen. It involves holding the deck, showing units, cards,
+ * the GUI and backgrounds. It also handles all key listeners and mouse
+ * listeners. Music selected in empire.java is also played.
+ * @author Souren A., Ken J.
+ * @since May 27th, 2019
+ * @version 2.96
+ */
+
+//timer class to keep track of time
 class Timer {
     long elapsedTime;
     long lastCheck;
@@ -23,58 +48,59 @@ class Timer {
         elapsedTime = 0;
     }
     
+    /**
+     * Updates the timer
+     */
     public void update() {
-        //
         long currentT = System.nanoTime();
         elapsedTime = currentT - lastCheck;
         lastCheck = currentT;
     }
     
+    /**
+     * Checks how long since the last update
+     * @return a double representing elapsed time in seconds
+     */
     public double getElapsedTime() {
         return elapsedTime/1.0E9;
     }
 }
 
+//main class
 class Game extends JFrame{
-    int placedCount;
-    int x;
-    int age;
-    int dx;
-    int dy;
-    int offsetX;
-    int offsetY;
-    double cdSum;
-    boolean left;
-    boolean right;
-    boolean hideCards;
-    boolean cooldown;
-    int dragCard;
-    int empireNumber;
-    int mana;
-    int ageMultiplier;
-    String empireName;
-    String zoom;
-    String imageBack;
-    String alertText;
-    String imageBase;
-    String soundFile;
-    Color dark;
-    Image background;
-    Image zoomedImage;
-    Image special;
-    Image overlay;
-    Image baseImage;
-    Deck deck;
-    ArrayList<DisplayCard> hand;
-    ArrayList<Entity> units;
-    ArrayList<Entity> enemy;
-    Date startDate;
-    Date endDate;
-    Timer clock;
-    Timer cd;
-    Base playerB;
-    Base enemyB;
-    End end;
+    private int placedCount;
+    private int x;
+    private int age;
+    private int dx,dy;
+    private int offsetX, offsetY;
+    private double cdSum;
+    private boolean left, right;
+    private boolean hideCards;
+    private boolean cooldown;
+    private int dragCard;
+    private int empireNumber;
+    private int mana;
+    private int ageMultiplier;
+    private String empireName;
+    private String zoom;
+    private String imageBack;
+    private String alertText;
+    private String imageBase;
+    private String soundFile;
+    private Color dark;
+    private Image background;
+    private Image zoomedImage;
+    private Image special;
+    private Image overlay;
+    private Image baseImage;
+    private Deck deck;
+    private ArrayList<DisplayCard> hand;
+    private ArrayList<Entity> units;
+    private ArrayList<Entity> enemy;
+    private Date startDate, endDate;
+    private Timer clock;
+    private Timer cd;
+    private Base playerB, enemyB;
     AudioStream as;
     
     Game(int e) {
@@ -82,6 +108,7 @@ class Game extends JFrame{
         imageBase="ageBase1.png";
         imageBack="ageBackground1.jpg";
         soundFile = "";
+        //checks for which empire was selected, sets the string and sets the music
         switch (e) {
             case 1:
                 empireName = "persia";
@@ -100,13 +127,18 @@ class Game extends JFrame{
                 soundFile = "mars.au";
                 break;
         }
+        
+        //tries to load in the song
         try {
           InputStream in = new FileInputStream(soundFile);
           as = new AudioStream(in);
         } catch (IOException ex) {
             System.out.println("Can't play");
         }
+        //plays song
         AudioPlayer.player.start(as);
+        
+        //variable setters
         age = 1;
         placedCount = 0;
         mana = 100;
@@ -134,6 +166,7 @@ class Game extends JFrame{
         playerB = new Base();
         enemyB = new Base();
         
+        //jframe setup
         setSize(1366,768); 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
@@ -156,27 +189,35 @@ class Game extends JFrame{
         add(whole);
         setVisible(true);
         
+        //loads deck
         initGame();
+        //adds 5 cards to the hand
         for (int i = 0; i < 5; i++) {
             addHand();
         }
     }
     
+    /**
+     * Loads in card list from cards.txt and creates
+     * a deck with them depending on the age.
+     */
     public void initGame() {
-        //load in the card list (1,1,1,2,2,2,2,2,3,4,4)
         File myFile;
         Scanner cardIn, cardLoader;
         try{
             myFile = new File("cards.txt"); 
             cardIn = new Scanner(myFile);
+            //load next card
             while (cardIn.hasNext()) {
                 int card = cardIn.nextInt();
                 card += ageMultiplier;
                 cardLoader = new Scanner(new File("persiaCards/" + card + ".txt"));
+                //place card in deck
                 deck.addCard(new Unit(cardLoader.next(),cardLoader.next(),
                                       cardLoader.nextInt(),cardLoader.nextInt(),cardLoader.nextInt(),
                                       cardLoader.nextInt(),cardLoader.nextInt(),cardLoader.nextInt()));
             }
+            //shuffle the deck
             deck.shuffle();
         } catch (FileNotFoundException e) {
             System.out.println("File not found.");
@@ -184,6 +225,9 @@ class Game extends JFrame{
         }
     }
     
+    /**
+     * Adds a card to the hand from the deck
+     */
     public void addHand() {
         hand.add(new DisplayCard((Unit)deck.pop()));
     }
@@ -198,6 +242,12 @@ class Game extends JFrame{
             setUndecorated(false);
         }
         
+        /**
+         * Converts a card object to an entity object
+         * to be displayed on the screen
+         * @param c the card object to be converted
+         * @return all data from the card as an entity object
+         */
         public Entity cardToEntity(Unit c) {
             String name = c.getName();
             String des = c.getDes();
@@ -209,33 +259,50 @@ class Game extends JFrame{
             int attack = c.getAttack();
             return new Entity(name,des,hp,armor,range,speed,price,attack);
         }
+        
+        /**
+         * Changes the age of the game
+         */
         public void changeAge() {
-            if (placedCount==10){
-                age = 2;
-                background = Toolkit.getDefaultToolkit().getImage(imageBack);
-                baseImage=Toolkit.getDefaultToolkit().getImage(imageBase);
-            }else if(placedCount==20){
-                age = 3;
-                background = Toolkit.getDefaultToolkit().getImage(imageBack);
-                baseImage=Toolkit.getDefaultToolkit().getImage(imageBase);
-            }else if(placedCount==30){
-                age = 4;
-                background = Toolkit.getDefaultToolkit().getImage(imageBack);
-                baseImage=Toolkit.getDefaultToolkit().getImage(imageBase);
-            }else if(placedCount==40){
-                age = 5;
-                background = Toolkit.getDefaultToolkit().getImage(imageBack);
-                baseImage=Toolkit.getDefaultToolkit().getImage(imageBase);
+            //change depending on count
+            switch (placedCount) {
+                case 10:
+                    age = 2;
+                    background = Toolkit.getDefaultToolkit().getImage(imageBack);
+                    baseImage=Toolkit.getDefaultToolkit().getImage(imageBase);
+                    break;
+                case 20:
+                    age = 3;
+                    background = Toolkit.getDefaultToolkit().getImage(imageBack);
+                    baseImage=Toolkit.getDefaultToolkit().getImage(imageBase);
+                    break;
+                case 30:
+                    age = 4;
+                    background = Toolkit.getDefaultToolkit().getImage(imageBack);
+                    baseImage=Toolkit.getDefaultToolkit().getImage(imageBase);
+                    break;
+                case 40:
+                    age = 5;
+                    background = Toolkit.getDefaultToolkit().getImage(imageBack);
+                    baseImage=Toolkit.getDefaultToolkit().getImage(imageBase);
+                    break;
+                default:
+                    break;
             }
             
+            //change images depending on age
             imageBack = "ageBackground" + age + ".jpg";
-            //imageBase= "ageBase1.png";
             imageBase= "ageBase" + age + ".jpg";
             ageMultiplier = 4 * (age - 1);
+            
+            //redo deck
             deck.clear();
             initGame();
         }
         
+        /**
+         * Spawns a new enemy on the field
+         */
         public void newEnemy() {
             int card = (int)(Math.random() * 4 + 1);
             try {
@@ -249,7 +316,12 @@ class Game extends JFrame{
             }
         }
         
-        //0 1 true would be unit ranged
+        /**
+         * Attacking between units and bases
+         * @param def the defender, moot if attacking base
+         * @param att the attacker, moot if attacking base
+         * @param target a string denoting the target
+         */
         public void attack(int def, int att, String target) {
             if (target.equals("enemy")) {
                 enemy.get(def).setHp(enemy.get(def).getHp() - units.get(att).getAttack());
@@ -281,6 +353,11 @@ class Game extends JFrame{
         }
         
         double cdL = 0;
+        
+        /**
+         * Draws everything on the screen
+         * @param g graphics object
+         */
         public void redrawAll(Graphics g) {
             //drawing base
             g.drawImage(baseImage, x + 10, 350, null);
@@ -294,6 +371,7 @@ class Game extends JFrame{
             g.setColor(Color.GREEN);
             g.fillRect(x + 2300, 350, (int)(145 * (enemyB.getBaseHealth()/(enemyB.getMaxH()*1.0))), 15);
             
+            //drawing enemies
             for (int i = 0; i < enemy.size(); i++) {
                 Image img = Toolkit.getDefaultToolkit().getImage("persiaCards/" + enemy.get(i).des.substring(0,enemy.get(i).des.indexOf(".")) + "p.png");
                 g.drawImage(img, x + (enemy.get(i).getX()), 400, null);
@@ -305,6 +383,8 @@ class Game extends JFrame{
                 g.setColor(Color.GREEN);
                 g.fillRect(x + enemy.get(i).getX(), 630, (int)(145 * (enemy.get(i).getHp()/(enemy.get(i).getMaxHP()*1.0))), 15);
             }
+            
+            //drawing allies
             for (int i = 0; i < units.size(); i++) {
                 Image img = Toolkit.getDefaultToolkit().getImage("persiaCards/" + units.get(i).des.substring(0,units.get(i).des.indexOf(".")) + "p.png");
                 g.drawImage(img, x + (units.get(i).getX()), 400, null);
@@ -316,9 +396,13 @@ class Game extends JFrame{
                 g.setColor(Color.GREEN);
                 g.fillRect(x + units.get(i).getX(), 630, (int)(145 * (units.get(i).getHp()/(units.get(i).getMaxHP()*1.0))), 15);
             }
-            if (!hideCards) {
+            
+            //drawing hand
+            if (!hideCards) { //if not hidden
                 for (int i = 0; i < hand.size() && i < 5; i++) {
                     Image img = Toolkit.getDefaultToolkit().getImage("persiaCards/" + hand.get(i).picture);
+                    
+                    //drawing cards if being dragged by mouse
                     if (!dragging || i != dragCard) {
                         g.drawImage(img, 25 + (i * 220), 500, null);
                     } else {
@@ -327,6 +411,7 @@ class Game extends JFrame{
                 }
             }
             
+            //drawing top bar
             g.setColor(new Color(200,200,200));
             g.fillRect(0,0,1366,50);
             
@@ -354,6 +439,7 @@ class Game extends JFrame{
             g.fillRect(0,0,(int)(100.0 * cdL),100);
             g.drawImage(overlay,0,0,null);
             
+            //cooldown bar logic for special ability
             if (cooldown) {
                 cd.update();
                 if (cdSum < 30) {
@@ -371,6 +457,10 @@ class Game extends JFrame{
         double enemySum = 0;
         Timer enemyTimer = new Timer();
         
+        /**
+         * Redraw the window and run the logic
+         * @param g graphics object
+         */
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
@@ -400,13 +490,16 @@ class Game extends JFrame{
                 }
             }
             
-            
+            //draw everything on the screen
             redrawAll(g);
             
             clock.update();
             double elapsed = clock.getElapsedTime();
             timeSum += elapsed;
+            
+            //units move every 0.01 seconds
             if (timeSum > 0.01) {
+                //move enemies
                 for (int i = 0; i < enemy.size(); i++) {
                     if (!enemy.get(i).getStop()) {
                         enemy.get(i).setX(enemy.get(i).getX() - enemy.get(i).getSpeed());
@@ -416,6 +509,7 @@ class Game extends JFrame{
                     }
                 }
                 
+                //move allies
                 for (int i = 0; i < units.size(); i++) {
                     if (!units.get(i).getStop()) {
                         units.get(i).setX(units.get(i).getX() + units.get(i).getSpeed());
@@ -424,19 +518,18 @@ class Game extends JFrame{
                         units.get(i + 1).setX(units.get(i).getX() - 200);
                     }
                 }
+                
+                //attacking logic
                 if ((units.size() > 0 && units.get(0).getStop()) || (enemy.size() > 0 && enemy.get(0).getStop())) {
                     endDate = new Date();
                     if (((endDate.getTime() - startDate.getTime())/1000)> 1) {
                         if (units.size() > 0 && enemy.size() > 0 && units.get(0).getStop() && enemy.get(0).getStop()) { //two units must be attacking each other
-                            System.out.println("Melee attack.");
                             attack(0,0,"enemy");
                             attack(0,0,"unit");
                             if (units.size() > 1 && units.get(1).getRange() == 2) {
-                                System.out.println("Unit ranged attack.");
                                 attack(0,1,"enemy");
                             }
                             if (enemy.size() > 1 && enemy.get(1).getRange() == 2) {
-                                System.out.println("Enemy ranged attack.");
                                 attack(0,1,"unit");
                             }
                         } else if (units.size() > 0 && units.get(0).getStop()) { //unit must be attacking base
@@ -467,18 +560,25 @@ class Game extends JFrame{
                     }
                 }
             }
+            
+            //if the player is zooming on a card
             if (!zoom.equals("")) {
                 g.drawImage(zoomedImage, 400, 100, null);
             }
+            
+            //check if a new age can dawn
             if (placedCount % 10 == 0) {
                 changeAge();
             }
             
+            //check if any units have died
             for (int i = 0; i < units.size(); i++) {
                 if (units.get(i).getHp() <= 0) {
                     units.remove(i);
                 }
             }
+            
+            //check if any enemies have died
             for (int i = 0; i < enemy.size(); i++) {
                 if (enemy.get(i).getHp() <= 0) {
                     mana += enemy.get(i).getPiercing() * 1.2;
@@ -489,6 +589,12 @@ class Game extends JFrame{
         }
         
         boolean done = false;
+        /**
+         * Called when a key is typed. All of
+         * these are debug commands which should not
+         * be run by the player
+         * @param e Key Event object
+         */
         public void keyTyped(KeyEvent e) {
             if (e.getKeyChar() == VK_ESCAPE) {
                 System.exit(0);
@@ -510,12 +616,19 @@ class Game extends JFrame{
             }
         }
         
+        /**
+         * Called when a key is pressed down.
+         * Holds the zooming and hiding logic
+         * @param e Key Event object
+         */
         public void keyPressed(KeyEvent e) {
-            if (e.getKeyChar() == 'z') {
+            if (e.getKeyChar() == 'z') { //zooming
                 Point p = MouseInfo.getPointerInfo().getLocation();
                 double px = p.getX();
                 double py = p.getY();
                 alertText = "";
+                
+                //which card is clicked
                 if (px > 169 && px < 318 && py > 525 && hand.size() > 0) {
                     dark = new Color(0,0,0,50);
                     zoom = hand.get(0).picture;                  
@@ -532,18 +645,27 @@ class Game extends JFrame{
                     dark = new Color(0,0,0,50);
                     zoom = hand.get(4).picture;
                 }
+                
+                //zoom in
                 if (!done && !zoom.equals("")) {
                     System.out.println(zoom);
                     zoomedImage = Toolkit.getDefaultToolkit().getImage("persiaCards/" + zoom.substring(0,zoom.indexOf(".")) + "x.png");
                     done = true;
                 }
             }
+            
+            //hide cards
             if (e.getKeyChar() == 'h') {
                 hideCards = true;
                 alertText = "";
             }
         }
         
+        /**
+         * Called when a key is released.
+         * Undos most key pressed
+         * @param e Key Event object
+         */
         public void keyReleased(KeyEvent e) {
             if (e.getKeyChar() == 'z') {
                 dark = new Color(0,0,0,0);
@@ -556,30 +678,51 @@ class Game extends JFrame{
         }
         
         boolean dragging = false;
+        /**
+         * Called when the mouse is released.
+         * Used to place a card down
+         * @param e Mouse Event object
+         */
         public void mouseReleased(MouseEvent e) {
+            //places a card
             if (e.getY() < 480 && dragging){
                 Unit look = hand.get(dragCard).getCard();
-                if (look.getPrice()<=mana){
-                    mana=mana-look.getPrice();
+                if (look.getPrice()<=mana){ //if you have enough mana
+                    //subtracts cost
+                    mana -= look.getPrice();
+                    //removes from hand
                     Unit c = hand.remove(dragCard).getCard();
+                    //converts to enemy
                     units.add(cardToEntity(c));
+                    //replenish hand
                     addHand();
+                    //increment counter
                     placedCount++;
                 } else {
+                    //prints if not enough mana to place
                     alertText = "Not enough mana";
                 }
             }
             dragging = false;
         }
         
+        /**
+         * Called when the left click button is pressed.
+         * Used to initiate card dragging
+         * @param e 
+         */
         public void mousePressed(MouseEvent e) {
-            System.out.println("Pressed. x: " +  e.getX() + " y: " + e.getY());
+            //get mouse position
             int px = e.getX();
             int py = e.getY();
+            
+            //moves through all 5 cards
             for (int i = 0; i < 5; i++) {
                 if (px > 25 + (i * 220) && px < 170 + (i * 220) && py > 500 && hand.size() > i) {
+                    //set dragging coordinates
                     dx = e.getX();
                     dy = e.getY();
+                    //keep card position relative to mouse so when dragged it does not jump
                     offsetX = dx - (25 + (i * 220));
                     offsetY = dy - 500;
                     dragging = true;
@@ -589,25 +732,49 @@ class Game extends JFrame{
             }
         }
         
+        /**
+         * Called when the left click is pressed and
+         * the mouse is moved. Used to update position
+         * of a card as its being moved.
+         * @param e Mouse Event object
+         */
         public void mouseDragged (MouseEvent e) {
             dx = e.getX();
             dy = e.getY();       
         }
         
+        //unused methods
         public void mouseExited(MouseEvent e) {}
         public void mouseEntered(MouseEvent e) {}
+        
+        /**
+         * Called when the left click button is
+         * clicked. Used to activate the special ability.
+         * @param e Mouse Event object
+         */
         public void mouseClicked(MouseEvent e) {
+            //get mouse position
             double px = e.getX();
             double py = e.getY();
+            
+            //distance formula from center of the button
             if (Math.sqrt(Math.pow(50-px,2) + Math.pow(50-py,2)) < 50 && !cooldown) {
                 //abilities
                 if (empireNumber==1){
-                    playerB.damageBase(-1000);
+                    //heal base for 100
+                    if (playerB.getMaxH() > playerB.getBaseHealth() + 100) {
+                        playerB.damageBase(-100);
+                    } else { //will not overheal
+                        playerB.damageBase(playerB.getBaseHealth() - playerB.getMaxH());
+                    }
                 }else if (empireNumber==2){
+                    //increase mana by 500
                     mana += 500;
                 }else if (empireNumber==3){
+                    //increase speed of first unit
                     units.get(0).setSpeed(100);
                 }else if (empireNumber==4){
+                    //vaporizes the first enemy
                     enemy.remove(0);
                 }
                 cooldown = true;
@@ -615,9 +782,11 @@ class Game extends JFrame{
                 cd.update();
             }
         }
+        //unused
         public void mouseMoved (MouseEvent e) {}
     }
     
+    //jpanel for scrolling left and right
     class ScrollComponent extends JPanel implements MouseListener {
         ScrollComponent() {
             this.addMouseListener(this);
@@ -626,12 +795,23 @@ class Game extends JFrame{
             setVisible(true);
         }
         
+        /**
+         * Called when the mouse exits
+         * the panel. Used to stop scrolling
+         * @param e Mouse Event object
+         */
         public void mouseExited(MouseEvent e) {
             left = false;
             right = false;
         }
         
+        /**
+         * Called when the mouse enters
+         * the panel. Used to start scrolling
+         * @param e Mouse Event object
+         */
         public void mouseEntered(MouseEvent e) {
+            //checks if scrolling left or right
             if (e.getXOnScreen() < 500) {
                 left = true;
             } else {
@@ -640,6 +820,7 @@ class Game extends JFrame{
             alertText = "";
         }
         
+        //unused listeners
         public void mouseReleased(MouseEvent e) {}
         public void mousePressed(MouseEvent e) {}
         public void mouseClicked(MouseEvent e) {}

@@ -2,7 +2,6 @@ import java.util.ArrayList;
 class Deck {
     //create the deck
     ArrayList<Card> deck;
-    
     public Deck() {
         deck = new ArrayList<Card>();
     }
