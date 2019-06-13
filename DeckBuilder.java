@@ -22,6 +22,7 @@ import sun.audio.AudioStream;
 /**
  * Allows to user to create their own deck of cards, meaning endless
  * combinations and play styles. Read and writes to a text file 
+ * 
  * @see cards.txt
  * @author Souren A., Ken J.
  * @since June 11th, 2019
@@ -106,7 +107,7 @@ public class DeckBuilder extends JFrame {
             g.drawImage(bg,0,0,null);
             if (displayS.length() < 40) {
                 g.setColor(Color.RED);
-            } else {
+            } else { //goes green if valid
                 g.setColor(Color.GREEN);
             }
             g.setFont(new Font("Consolas Regular", Font.PLAIN, 70));
@@ -120,6 +121,7 @@ public class DeckBuilder extends JFrame {
          */
         public void keyPressed(KeyEvent e) {
             if (displayS.length() < 40) {
+                //input from the user
                 if (e.getKeyChar() == '1') {
                     displayS += "1 ";
                 } else if (e.getKeyChar() == '2') {
@@ -131,6 +133,7 @@ public class DeckBuilder extends JFrame {
                 }
             }
             if (displayS.length() > 0) {
+                //backspace removes a character
                 if (e.getKeyChar() == KeyEvent.VK_BACK_SPACE) {
                     displayS = displayS.substring(0,displayS.length() - 2);
                 }

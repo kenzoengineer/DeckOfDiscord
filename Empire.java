@@ -16,6 +16,7 @@ import sun.audio.AudioStream;
  * The empire selection screen, which allows the user to pick from 4 different
  * empires: Perisa, China, Mexico and Mars. Each have different abilities and
  * play different songs during the game
+ * 
  * @since May 25th, 2019
  * @author Souren A., Ken J.
  * @version 2.50
@@ -107,7 +108,11 @@ class Empire extends JFrame{
           requestFocusInWindow();
           setUndecorated(false);
         }
-
+        
+        /**
+         * Called when the mouse is clicked
+         * @param e Mouse Event object
+         */
         public void mouseClicked(MouseEvent e) {
             //get pointer coordinates
             px= e.getX();

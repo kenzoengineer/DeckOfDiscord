@@ -33,6 +33,7 @@ import sun.audio.AudioStream;
  * it to the screen. It involves holding the deck, showing units, cards,
  * the GUI and backgrounds. It also handles all key listeners and mouse
  * listeners. Music selected in empire.java is also played.
+ * 
  * @author Souren A., Ken J.
  * @since May 27th, 2019
  * @version 2.96
@@ -581,7 +582,7 @@ class Game extends JFrame{
             //check if any enemies have died
             for (int i = 0; i < enemy.size(); i++) {
                 if (enemy.get(i).getHp() <= 0) {
-                    mana += enemy.get(i).getPiercing() * 1.2;
+                    mana += enemy.get(i).getPrice() * 1.2;
                     enemy.remove(i);
                 }
             }

@@ -1,13 +1,24 @@
 import java.util.ArrayList;
+
+/**
+ * Holds an arraylist which serves as the deck
+ * of all the cards. It is filled in Game.java
+ * and is popped from to the hand
+ * 
+ * @author Souren A., Ken J.
+ * @since May 26th, 2019
+ * @version 2.58
+ */
+
 class Deck {
     //create the deck
-    ArrayList<Card> deck;
+    private ArrayList<Card> deck;
     public Deck() {
         deck = new ArrayList<Card>();
     }
     
     /**
-     * add a card to the bottom of the deck
+     * Add a card to the bottom of the deck
      * @param c the card to be added
      */
     public void addCard(Card c) {
@@ -15,7 +26,7 @@ class Deck {
     }
     
     /**
-     * peeks at the top of the deck without removing it
+     * Peeks at the top of the deck without removing it
      * @return the card at the top
      */
     public Card peek() {
@@ -23,7 +34,7 @@ class Deck {
     }
     
     /**
-     * looks at the top of the deck and removes that card
+     * Looks at the top of the deck and removes that card
      * @return the card that was removed
      */
     public Card pop() {
@@ -31,7 +42,7 @@ class Deck {
     }
     
     /**
-     * shuffles the deck
+     * Shuffles the deck
      */
     public void shuffle() {
         ArrayList<Card> temp = new ArrayList<>(deck);
@@ -42,12 +53,20 @@ class Deck {
         }
     }
     
+    /**
+     * clears the whole deck
+     */
     public void clear() {
         if (!deck.isEmpty()) {
             deck.clear();
         }
     }
     
+    /**
+     * Debug method used to print the
+     * deck as a string in the console
+     * @return a string with the deck
+     */
     @Override
     public String toString() {
         String str = "";

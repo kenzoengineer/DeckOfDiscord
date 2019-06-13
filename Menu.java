@@ -15,6 +15,7 @@ import sun.audio.AudioStream;
 /**
  * The main menu of the game when you first open it. It leads to starting the
  * game, how to play, building the deck and exit. It also plays the menu music
+ * 
  * @author Souren A., Ken J.
  * @since May 24th, 2019
  * @version 2.82
