@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import sun.audio.AudioPlayer;
-import sun.audio.AudioStream;
 
 /**
  * The empire selection screen, which allows the user to pick from 4 different
@@ -24,7 +22,6 @@ import sun.audio.AudioStream;
 class End extends JFrame{
     Image win;
     Image lose;
-    AudioStream audioStream;
     String soundFile;
     
     Empire() {
